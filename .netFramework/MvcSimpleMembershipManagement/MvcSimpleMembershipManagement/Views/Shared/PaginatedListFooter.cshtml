@@ -1,0 +1,29 @@
+﻿@using MvcSimpleMembershipManagement.Helpers
+
+@{
+    
+  if (Model is IPaginatedList)
+   {
+       var model = Model as IPaginatedList;
+       var search = (String)ViewData["searchItem"];
+       if (model.HasPreviousPage)
+       {
+           @Html.RouteLink("Previous", new { page = (model.PageIndex - 1), searchItem = search })
+       }
+       else
+       {
+           <span>[Previous]</span>
+       }
+
+       if (model.HasNextPage)
+       {
+            @Html.RouteLink("Next",new { page = (model.PageIndex + 1), searchItem = search })
+       }
+       else
+       {
+            <span>[Next]</span>
+       }
+       
+   }
+}
+

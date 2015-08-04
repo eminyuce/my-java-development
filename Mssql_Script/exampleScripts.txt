@@ -1,0 +1,590 @@
+ 
+ 
+ declare @ProfileID int = 1970847
+SELECT *
+       ,CASE WHEN CHARINDEX('.aspx?',[PagePath]) > 0
+		THEN RIGHT(REPLACE(SUBSTRING([PagePath],1,CHARINDEX('.aspx',[PagePath])-1), '.aspx', ''),6)    
+		ELSE RIGHT(REPLACE([PagePath], '.aspx', ''),6)   
+       END as StoryID 
+  INTO #tmp FROM [Miscellaneous].[dbo].[ga_Pages] 
+  WHERE [ProfileId]=@ProfileID and [PagePath] LIKE '/news/%' and 
+        1 = CASE  WHEN CHARINDEX('.aspx?',[PagePath]) > 0
+		THEN ISNUMERIC(RIGHT(REPLACE(SUBSTRING([PagePath],1,CHARINDEX('.aspx',[PagePath])-1), '.aspx', ''),6))     
+		ELSE ISNUMERIC(RIGHT(REPLACE([PagePath], '.aspx', ''),6))   
+		END
+  
+  
+  SELECT   t1.StoryID, t1.Title, p.StoryID, p.[PagePath]
+  FROM [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc] t1 
+  INNER JOIN #tmp p on  t1.StoryID=p.StoryID
+  
+  drop table #tmp
+  
+  
+
+begin tran
+UPDATE R   SET R.city = RTRIM(LTRIM(P.city)) FROM dbo.med_Location as R
+   INNER JOIN dbo._man_Locations  AS P 
+       ON R.lid = P.LocationID 
+   where  R.CompanyId =109067
+   
+   commit tran
+   rollback tran
+
+
+-- ================================================
+-- Template generated from Template Explorer using:
+-- Create Procedure (New Menu).SQL
+--
+-- Use the Specify Values for Template Parameters 
+-- command (Ctrl-Shift-M) to fill in the parameter 
+-- values below.
+--
+-- This block of comments will not be included in
+-- the definition of the procedure.
+-- ================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- gas_mnt_MatchGNToStories2 1970847
+-- 
+-- select * FROM [Miscellaneous].[dbo].[ga_Pages] p where PagePath like '%News/363656.aspx%'
+-- select * FROM [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc] t1 where StoryId=363656
+ALTER PROCEDURE gas_mnt_MatchGNToStories2
+	 @ProfileID int = 21816736
+AS
+BEGIN
+	-- DECLARE @ProfileID int = 21816736
+	DECLARE @PagePathFilter nvarchar(250) = '/news/%'
+	
+	DECLARE @NwmSourceId INT
+	SELECT @NwmSourceId = NwmSourceId  FROM gas_Sources WHERE Source='[sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc]'
+	IF ISNULL(@NwmSourceId,0)=0
+	BEGIN
+		INSERT INTO gas_Sources(Source)
+		VALUES('[sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc]')
+		SET @NwmSourceId=SCOPE_IDENTITY()
+	END
+	
+	
+	SELECT p.*
+	     ,@NwmSourceId NwmSourceId
+		,CASE WHEN CHARINDEX('.aspx?',[PagePath]) > 0
+			THEN RIGHT(REPLACE(SUBSTRING([PagePath],1,CHARINDEX('.aspx',[PagePath])-1), '.aspx', ''),6)    
+			ELSE RIGHT(REPLACE([PagePath], '.aspx', ''),6)   
+		 END as StoryID 
+  INTO #tmp FROM [Miscellaneous].[dbo].[ga_Pages] p 
+  LEFT OUTER JOIN gas_StoryPages as sp on p.PageId=sp.PageId
+  WHERE sp.PageId IS NULL AND [ProfileId]=@ProfileID and [PagePath] LIKE @PagePathFilter AND 
+        1 = CASE  WHEN CHARINDEX('.aspx?',[PagePath]) > 0
+		THEN ISNUMERIC(RIGHT(REPLACE(SUBSTRING([PagePath],1,CHARINDEX('.aspx',[PagePath])-1), '.aspx', ''),6))     
+		ELSE ISNUMERIC(RIGHT(REPLACE([PagePath], '.aspx', ''),6))   
+		END
+ 
+  SELECT    t1.StoryID,t1.[DateCreated],t1.[Title],t1.Author, p.NwmSourceId, p.PageId 
+	INTO #Records FROM [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc] t1 
+	INNER JOIN (
+	select  NwmSourceId,StoryID, MAX(PageId) PageId 
+	from #tmp group by NwmSourceId,StoryID) 
+	p on  t1.StoryID=p.StoryID
+ 
+	 
+    -- SELECT StoryID,NwmSourceId,  count(*)   from #Records group by  StoryID,NwmSourceId having  count(*) > 1
+	-- SELECT * from #Records order by StoryID
+	-- SELECT  StoryID,  count(*)   from  [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc]   group by  StoryID having  count(*) > 1
+	 
+	  
+ 
+ 	INSERT INTO gas_Authors (Name)
+	SELECT  distinct r.Author FROM #Records as r LEFT OUTER JOIN  gas_Authors as a on r.Author = a.Name where a.Name is NULL
+	
+	 
+	INSERT INTO [dbo].[gas_Stories]
+           ([AuthorId]
+           ,[DateCreated]
+           ,[Title]
+           ,NwmSourceId
+           ,SourceId)
+	 SELECT a.AuthorId, r.DateCreated, r.Title, r.NwmSourceId, r.StoryId 
+	 FROM 
+	 (
+	 SELECT MAX(DateCreated) DateCreated, MAX(Title) Title, MAX(NwmSourceId) NwmSourceId, MAX(Author) Author, StoryId 
+	 FROM #Records r1
+	 GROUP BY StoryId ) r INNER JOIN gas_Authors a on r.Author = a.Name
+	LEFT OUTER JOIN gas_Stories as sp on r.StoryId = sp.StoryId 
+	where   sp.StoryId  is  null
+	 
+ 
+	INSERT INTO  [dbo].[gas_StoryPages]
+           ([StoryId]
+           ,[PageId])
+	SELECT s.StoryId,r.PageId FROM  gas_Stories s
+		INNER JOIN #Records r	ON s.SourceId= r.StoryId
+		AND s.NwmSourceId=@NwmSourceId
+	 
+	 /*	   
+	--	select  NwmSourceId,  SourceId, count(*)   from [dbo].[gas_Stories] group by  NwmSourceId,  SourceId having  count(*) > 1
+	--  select * from [dbo].[gas_Stories]  where NwmSourceId=4007 and SourceId=337763
+	-- select * from [dbo].[gas_StoryPages] as sp Inner join  [dbo].[gas_Stories] as g on sp.StoryId=g.StoryId where g.NwmSourceId=4007  
+    -- delete sp from [dbo].[gas_StoryPages] sp Inner join  [dbo].[gas_Stories] as g on sp.StoryId=g.StoryId where g.NwmSourceId=4007
+    -- delete from [dbo].[gas_Stories] where NwmSourceId=4007
+     */
+
+  
+
+  
+END
+GO
+
+ALTER PROCEDURE [dbo].[gas_AuthorPostViewStats]
+	@StartDate date,
+	@EndDate date,
+	@ProfileId int = 0
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	-- declare @ProfileId int = 36905957
+	
+	  SELECT a.Name, t.Views, t.Posts, t.Views/t.Posts as ViewPerPost FROM (
+		  SELECT s.AuthorId, SUM(p.PageViews) Views, COUNT(distinct sp.StoryId) Posts  FROM  gas_StoryPages sp
+					  INNER JOIN gas_Stories s on sp.StoryId = s.StoryId 
+					  INNER JOIN ga_PageViews as p on sp.PageId = p.PageId
+					  INNER JOIN ga_Pages as gp on gp.PageId = p.PageId
+					  WHERE CONVERT(date, p.PageDate) >= @StartDate and  CONVERT(date, p.PageDate) <= @EndDate and gp.ProfileId=CASE WHEN @ProfileId = 0 THEN gp.ProfileId ELSE @ProfileId END
+		 GROUP BY s.AuthorId
+	) t INNER JOIN  gas_Authors a on a.AuthorId = t.AuthorId
+	ORDER BY a.Name, t.Posts desc  
+ 
+END
+
+
+
+ALTER PROCEDURE [dbo].[gas_AuthorStoryPopularities]
+	@StartDate date,
+	@EndDate date,
+	@ProfileId int = 0,
+	@TypeId int = 0	,
+	@Take int =20,
+	@Skip int =0
+AS
+BEGIN
+	SET NOCOUNT ON;
+ 
+		CREATE TABLE #matchedStories (StoryId int, PageViews int, rowNumber int)
+
+
+		INSERT INTO 	#matchedStories(StoryId , PageViews , rowNumber)
+		SELECT    gas_Stories.StoryId,  SUM( ga_PageViews.PageViews) PageViews, ROW_NUMBER() OVER (ORDER BY SUM( ga_PageViews.PageViews) DESC) AS rowNumber
+		FROM         gas_Stories INNER JOIN
+                      gas_StoryPages ON gas_Stories.StoryId = gas_StoryPages.StoryId INNER JOIN
+                      ga_PageViews ON gas_StoryPages.PageId = ga_PageViews.PageId INNER JOIN
+                      ga_Pages ON ga_PageViews.PageId = ga_Pages.PageId
+
+		WHERE 	 ga_PageViews.PageDate>=@StartDate AND  ga_PageViews.PageDate<@EndDate
+				AND   ga_Pages.ProfileId= CASE WHEN 	@ProfileId>0 THEN @ProfileId ELSE ga_Pages.ProfileId  END 
+				AND   gas_Stories.TypeId =CASE WHEN 	@TypeId>0 THEN @TypeId ELSE gas_Stories.TypeId  END 
+
+		GROUP BY gas_Stories.StoryId 
+		ORDER BY  PageViews DESC
+
+
+	
+		DECLARE @RC INT
+		SET @RC=@@RowCount
+		
+		SELECT s.StoryId, ms.PageViews, s.Title   , a.Name
+		FROM   gas_Stories  s
+			INNER JOIN #matchedStories ms
+			ON s.StoryId=ms.StoryId
+			LEFT OUTER JOIN     gas_Authors a
+				ON s.AuthorId=a.AuthorId
+
+		WHERE ms.rowNumber BETWEEN @skip+1 AND @skip+@take 
+
+ 
+		SELECT COUNT(*) RecordsTotal, @skip+1 recordFirst,  @skip+@Take recordLast, @RC recordCount FROM #matchedStories 
+
+		DROP TABLE #matchedStories
+
+
+END
+
+
+
+USE [Miscellaneous]
+GO
+/****** Object:  StoredProcedure [dbo].[med_sp_SearchCompanies]    Script Date: 02/03/2014 10:10:14 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+/*
+
+DECLARE @filter AS dbo.med_tpt_Filter
+ 
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('CompanyType','Distributors','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('country','United States','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('Brand','foruno','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('state','New York','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('city','Tuzla-Istanbul','')
+
+exec [dbo].[med_sp_SearchCompanies] 
+@search = 'furuno', 
+@top = 20, 
+@skip = 0, 
+@filter= @filter
+
+*/
+ALTER PROCEDURE [dbo].[med_sp_SearchCompanies]
+	@search nvarchar(200)='',
+	@top int=20,
+	@skip int=0,
+	@filter AS dbo.med_tpt_Filter Readonly 
+AS
+BEGIN
+
+	SET NOCOUNT ON;
+	
+	/*
+IF EXISTS(select name from tempdb..sysobjects  where name like '#recordFound%') drop table #recordFound
+*/
+CREATE TABLE #recordFound (CompanyId int, FiltersMatched int)
+
+
+INSERT INTO #recordFound (CompanyId, FiltersMatched)
+SELECT CompanyId, 0
+FROM dbo.med_v_CompaniesActive
+
+
+
+
+DECLARE @FieldName VARCHAR(100)
+DECLARE @ValueFirst VARCHAR(100)
+
+DECLARE cFilters CURSOR FOR  
+SELECT FieldName, ValueFirst
+FROM @filter
+
+
+OPEN cFilters  
+FETCH NEXT FROM cFilters INTO @FieldName,  @ValueFirst 
+
+
+Declare @companyType nvarchar(255)
+Declare @brand nvarchar(255)
+Declare @country nvarchar(255)
+Declare @state nvarchar(255)
+Declare @city nvarchar(255)	
+	 
+set @companyType = NULL 
+set @brand = NULL 
+set @country = NULL 
+set @state = NULL 
+set @city = NULL 
+ 
+		
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+
+	print @FieldName
+	
+	
+	IF @FieldName='CompanyType'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT   cb.CompanyId
+			FROM         dbo.med_CompanyTypes b INNER JOIN
+						 dbo.med_CompanyTypeRelations cb ON b.CompanyTypeId = cb.CompanyTypeId
+			WHERE b.Type=@ValueFirst
+		  ) m
+		  ON rf.CompanyId = m.CompanyId
+		  set @companyType = @ValueFirst 
+	END
+	
+	
+	IF @FieldName='Brand'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT   cb.CompanyId
+			FROM         med_Brands b INNER JOIN
+						 med_CompanyBrands cb ON b.BrandId = cb.BrandId
+			WHERE b.Brand=@ValueFirst
+		  ) m
+		  ON rf.CompanyId = m.CompanyId
+		 set @brand = @ValueFirst 
+	END
+	
+	
+	
+	
+	IF @FieldName='State'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT CompanyId
+			FROM dbo.med_v_LocationActive
+			WHERE State=@ValueFirst
+
+		  ) m
+		  ON rf.CompanyId = m.CompanyId
+		  
+		  set @state = @ValueFirst 
+		  
+		
+	END
+	
+	
+	
+	IF @FieldName='Country'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT CompanyId
+			FROM dbo.med_v_LocationActive
+			WHERE Country=@ValueFirst
+
+		  ) m
+		  ON rf.CompanyId = m.CompanyId
+		  
+		  set @country = @ValueFirst 
+		 
+	END
+	
+	
+	
+	IF @FieldName='City'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT CompanyId
+			FROM dbo.med_v_LocationActive
+			WHERE City =  @ValueFirst
+
+		  ) m
+		  ON rf.CompanyId = m.CompanyId
+		  
+		 set @city = @ValueFirst 
+	END
+
+	-- TO DO: Add Other filters
+	
+	
+	FETCH NEXT FROM cFilters INTO @FieldName,  @ValueFirst 
+
+END  
+
+CLOSE cFilters  
+DEALLOCATE cFilters 
+
+--select * from #recordFound WHERE FiltersMatched>0
+
+DELETE FROM #recordFound 
+WHERE FiltersMatched<(SELECT COUNT(*) FROM @filter)
+
+/*
+IF EXISTS(select name from tempdb..sysobjects  where name like '#recordFound2%') drop table #recordFound
+*/
+
+CREATE TABLE #recordFound2 (CompanyId int, rowNumber int)
+
+
+		
+				
+				
+		IF (LEN (ISNULL(@search,''))>0)  
+		BEGIN
+				
+				INSERT INTO  #recordFound2 (CompanyId , rowNumber )
+				SELECT rf.CompanyId , 	ROW_NUMBER() OVER (ORDER BY [RANK] DESC, rf.CompanyID) AS rowNumber 
+				FROM #recordFound rf INNER JOIN
+				(
+			    SELECT s.ItemId as CompanyId, ft.[RANK] as [RANK] 
+				FROM  med_Search s  
+				INNER JOIN 	FREETEXTTABLE (dbo.[med_Search], *, @search) ft ON s.[SearchId]=ft.[Key]
+				WHERE s.ItemType=1
+				) fts
+				ON rf.CompanyId=fts.CompanyId
+				order by rowNumber
+		
+		END
+		ELSE
+		BEGIN
+			
+			INSERT INTO  #recordFound2 (CompanyId , rowNumber )
+			SELECT c.CompanyId, 	ROW_NUMBER() OVER (ORDER BY c.CompanyId) AS rowNumber 
+				FROM #recordFound rf
+				INNER join med_Companies c
+					ON rf.CompanyId=c.CompanyId
+			order by rowNumber
+		
+		END
+		
+		
+		
+	    SELECT c.CompanyId, Company, Description, Url, 	rf.rowNumber
+			 FROM #recordFound2 rf
+				INNER join med_Companies c ON rf.CompanyId=c.CompanyId
+			WHERE rf.rowNumber BETWEEN @skip+1 AND @skip+@top
+		
+		DECLARE @RC INT
+		SET @RC=@@RowCount
+				 
+
+		SELECT * 
+			FROM
+			(	
+				SELECT  'companyType' as FieldName,c.Type   as ValueFirst,'' as ValueLast,Count(*) cnt, 10 ord   
+				FROM        dbo.med_CompanyTypeRelations ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.CompanyId
+				inner join dbo.med_CompanyTypes c on ct.CompanyTypeId = c.CompanyTypeId
+				--where c.Type = ISNULL(@companyType,c.Type)
+				group by c.Type
+					
+					UNION
+					
+				SELECT  'brand' as FieldName,b.Brand   as ValueFirst,'' as ValueLast, cnt, 20 ord 
+				FROM
+				(  
+					SELECT ct.BrandId,Count(*) cnt
+					FROM        dbo.med_CompanyBrands ct
+					INNER JOIN #recordFound2 rf on rf.CompanyId=ct.CompanyId
+					group by ct.BrandId
+				) t inner join med_Brands b
+				ON t.BrandId=b.BrandId
+				--where b.Brand =ISNULL(@brand, b.Brand)
+				
+				--  select * from  dbo.med_CompanyBrands ct inner join  dbo.med_Brands b on ct.BrandId=b.BrandId where  CompanyId=107347 
+				--  select * from  dbo.med_CompanyBrands ct inner join  dbo.med_Brands b on ct.BrandId=b.BrandId where  CompanyId=107347 
+				
+					UNION
+					
+				SELECT  'country' as FieldName,CAST(ct.country as varchar)   as ValueFirst,'' as ValueLast,Count(*) cnt, 30 ord   
+				FROM        dbo.med_v_LocationActive ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.CompanyId
+                --where ct.country = ISNULL(@country,   ct.country)   
+				group by ct.country
+
+
+				
+					UNION
+				SELECT  'state' as FieldName,CAST(ct.state as varchar)   as ValueFirst,'' as ValueLast,Count(*) cnt, 40 ord   
+				FROM        dbo.med_v_LocationActive ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.CompanyId
+				--where  ct.country = ISNULL(@country,   ct.country)  and ct.state = ISNULL(@state,   ct.state)  
+				group by ct.state	
+				HAVING ct.state <>''
+			
+				UNION
+				
+				SELECT  'city' as FieldName,CAST(ct.city as varchar)   as ValueFirst,'' as ValueLast,Count(*) cnt, 50 ord   
+				FROM        dbo.med_v_LocationActive ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.CompanyId
+				--where ct.country = ISNULL(@country,   ct.country)  and ct.state = ISNULL(@state,   ct.state)  and ct.city = ISNULL(@city,   ct.city)  
+				group by ct.city
+				 
+				
+				--select * from dbo.med_v_LocationActive  where CompanyId = 107178
+				
+ ) AS E ORDER BY ord
+
+				
+		SELECT COUNT(*) RecordsTotal, @skip+1 recordFirst,  @skip+@top recordLast, @RC recordCount
+		FROM #recordFound2 
+
+		select MI.* from dbo.med_Images as MI  inner join #recordFound2 RF on MI.ItemId =RF.CompanyId
+		where MI.ItemType = 1 
+		--and MI.Type ='logo'
+		
+
+
+
+ 
+END
+<<<<<<< .mine
+
+ ALTER PROCEDURE ga_GetTopMarinelinkNewsStories
+	@days int = 7,
+	@top int = 10
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	SELECT @days = -1 * @days
+	DECLARE @ProfileID int = 1970847  -- marinelink.com
+	DECLARE @StartDate date = convert(date,dateadd(day,@days,getdate())) 
+	DECLARE @EndDate date =  convert(date,getdate())
+	DECLARE @PreviousDay date = convert(date,dateadd(day,-1,getdate()))
+	DECLARE @DayBeforePreviousDay date = convert(date,dateadd(day,-2,getdate()))
+	
+	SELECT SourceId, 'Views' = 
+			  CASE 
+				 WHEN DateCreated = @PreviousDay  THEN TotalPageViews * 1.4
+				 WHEN DateCreated = @DayBeforePreviousDay  THEN TotalPageViews * 1.03
+				 ELSE TotalPageViews
+			  END 
+			  FROM (
+		SELECT  TOP (@top)  s.SourceId, SUM(ga_PageViews.PageViews) AS TotalPageViews , convert(date,s.DateCreated)  DateCreated
+					FROM         gas_StoryPages INNER JOIN
+										  gas_Stories AS s ON s.StoryId = gas_StoryPages.StoryId INNER JOIN
+										  ga_Pages ON gas_StoryPages.PageId = ga_Pages.PageId INNER JOIN
+										  ga_PageViews ON ga_Pages.PageId = ga_PageViews.PageId
+				WHERE     (ga_Pages.ProfileId = @ProfileID) AND (convert(date,s.DateCreated) >= @StartDate) AND ( convert(date,s.DateCreated) < @EndDate)
+					GROUP BY s.SourceId, convert(date,s.DateCreated) 
+					ORDER BY TotalPageViews DESC
+			) t 
+
+END
+GO
+
+
+  begin tran
+  DECLARE @OutputTbl TABLE (ID INT, ID2 Int)
+  
+  INSERT INTO [Directory].[dbo].[mt_Connects]
+           ([Web]
+           ,[Email]
+           ,[Phone]
+           ,[Fax])
+           OUTPUT INSERTED.ConnectId  INTO @OutputTbl(ID)
+SELECT      [website]
+			,[email]
+			,[tel]
+			,[fax]
+	 FROM [Miscellaneous].[dbo].[mtr100_Application] as m
+  INNER JOIN  [Directory].[dbo].[mt_Companies] as c ON c.SourceId = m.intID 
+  
+  
+  		select * from @OutputTbl
+  		select * from [Directory].[dbo].[mt_Connects]
+  
+  rollback tran

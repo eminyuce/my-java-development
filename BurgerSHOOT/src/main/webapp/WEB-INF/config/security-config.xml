@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+           http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-2.0.2.xsd">
+
+
+	<security:global-method-security
+		secured-annotations="enabled" />
+
+
+	<!-- Configure Spring Security -->
+	<security:http auto-config="true"  session-fixation-protection="none">
+		<security:form-login login-page="/spring/login"
+			login-processing-url="/spring/loginProcess" default-target-url="/spring/intro"
+			authentication-failure-url="/spring/login?login_error=1" />
+		<security:logout logout-url="/spring/logout"
+			logout-success-url="/spring/logoutSuccess" invalidate-session="true" />
+		
+		<security:intercept-url pattern="/spring/login"
+			requires-channel="https" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/spring/loginProcess"
+			requires-channel="https" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/**"
+			requires-channel="http" />
+	</security:http>
+
+	<security:authentication-provider>
+		<!-- <security:password-encoder hash="md5" /> -->
+		<!-- <security:user-service> -->
+		<!-- <security:user name="keith" password="145145" -->
+		<!-- authorities="ROLE_USER, ROLE_SUPERVISOR" /> -->
+		<!-- <security:user name="erwin" password="12430911a8af075c6f41c6976af22b09" -->
+		<!-- authorities="ROLE_USER, ROLE_SUPERVISOR" /> -->
+		<!-- <security:user name="jeremy" password="57c6cbff0d421449be820763f03139eb" -->
+		<!-- authorities="ROLE_USER" /> -->
+		<!-- <security:user name="scott" password="942f2339bf50796de535a384f0d1af3e" -->
+		<!-- authorities="ROLE_USER" /> -->
+		<!-- </security:user-service> -->
+
+		<!-- <security:ldap-user-service/> -->
+
+		<security:jdbc-user-service
+			data-source-ref="dataSource" />
+	</security:authentication-provider>
+
+</beans>

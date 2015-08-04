@@ -1,0 +1,86 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<div class="section"><h:form id="confirm">
+			<h:panelGroup layout="block">
+				<h:panelGrid columns="2">
+					<h:outputText styleClass="detailsTableLabel" value="ID"></h:outputText>
+					<h:outputText value="#{product.fldid}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Name"></h:outputText>
+					<h:outputText value="#{product.fldname}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Description"></h:outputText>
+					<h:outputText value="#{product.flddesc}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Calorie"></h:outputText>
+					<h:outputText value="#{product.calorie}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Fat"></h:outputText>
+					<h:outputText value="#{product.fat}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Type">
+
+					</h:outputText>
+					<h:outputText value="#{product.producttype.fldname}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Protein">
+
+					</h:outputText>
+					<h:outputText value="#{product.protein}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Carbohydrate"></h:outputText>
+					<h:outputText value="#{product.carbohydrate}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Cholesterol"></h:outputText>
+					<h:outputText value="#{product.cholesterol}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Fiber"></h:outputText>
+					<h:outputText value="#{product.fiber}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Sugar"></h:outputText>
+					<h:outputText value="#{product.sugar}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Sodium"></h:outputText>
+					<h:outputText value="#{product.sodium}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Calcium"></h:outputText>
+					<h:outputText value="#{product.calcium}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Salt"></h:outputText>
+					<h:outputText value="#{product.salt}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Iron"></h:outputText>
+					<h:outputText value="#{product.iron}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Vitamin A"></h:outputText>
+					<h:outputText value="#{product.vitA}"
+						styleClass="detailsTabledetail"></h:outputText>
+					<h:outputText styleClass="detailsTableLabel" value="Vitamin C"></h:outputText>
+					<h:outputText value="#{product.vitC}"
+						styleClass="detailsTabledetail"></h:outputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:commandButton styleClass="detailsSubmit" action="OK" value="OK"></h:commandButton>
+
+		</h:form></div>
+	</ui:define>
+
+
+
+	<ui:define name="side-menu">
+		<a href="details.xhtml#" class="morelink">Selam</a>
+		<a href="details.xhtml#" class="morelink">Kelam</a>
+	</ui:define>
+
+
+</ui:composition>

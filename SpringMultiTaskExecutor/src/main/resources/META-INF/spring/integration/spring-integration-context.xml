@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:int="http://www.springframework.org/schema/integration"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/integration
+                        http://www.springframework.org/schema/integration/spring-integration-2.1.xsd">
+	
+
+		<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		  <property name="corePoolSize" value="50" />
+		  <property name="maxPoolSize" value="60" />
+		  <property name="queueCapacity" value="50" />
+		</bean>
+
+		<bean id="taskExecutorExample" class="com.emin.yuce.service.TaskExecutorExampleService">
+		  <constructor-arg ref="taskExecutor" />
+		</bean>
+
+</beans>

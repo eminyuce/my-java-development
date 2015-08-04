@@ -1,0 +1,64 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+
+		<h:form id="userDetailForm">
+			<!--			<a4j:keepAlive beanName="fileUploadBean" />-->
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Upload Profile Image" />
+				</f:facet>
+				<h:panelGrid columns="2">
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText value="Profile Image" />
+						</f:facet>
+						<a4j:mediaOutput id="imagePane" element="img"
+							createContent="#{fileUploadBean.paint}"
+							mimeType="#{fileUploadBean.file.mime}"
+							value="#{fileUploadBean.nullPlaceHolder}" cacheable="false" />
+					</rich:panel>
+
+					<rich:panel>
+						<f:facet name="header">
+							<h:outputText value="Upload Your Image" />
+						</f:facet>
+
+						<rich:fileUpload fileUploadListener="#{fileUploadBean.listener}"
+							maxFilesQuantity="${1}" id="upload" immediateUpload="${false}"
+							acceptedTypes="jpg, gif, png, bmp, jpeg" allowFlash="${true}">
+							<a4j:support event="onuploadcomplete" reRender="imagePane">
+							</a4j:support>
+						</rich:fileUpload>
+
+					</rich:panel>
+					
+					<h:outputText value="#{fileUploadBean.file.data}"/>
+					
+					<a4j:commandButton value="OK" action="OK">
+					</a4j:commandButton>
+					
+					<h:commandButton value="Back" action="Back" />
+
+				</h:panelGrid>
+
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="side-menu">
+		<a href="uploadImage.xhtml#" class="morelink">Selam</a>
+		<a href="uploadImage.xhtml#" class="morelink">Kelam</a>
+	</ui:define>
+
+</ui:composition>
+

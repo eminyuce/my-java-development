@@ -1,0 +1,32 @@
+﻿@model MvcSimpleMembershipManagement.Entities.UserRoleModelView
+
+@{
+    ViewBag.Title = "AssignRole";
+}
+
+<h2>Assign Roles For @Model.UserName</h2>
+
+@using (Html.BeginForm("AssignRolesforUser", "UserRole"))
+{
+    @Html.HiddenFor(r=>r.page)
+    foreach (var p in Model.roles)
+    {
+    <li>
+        @if (Model.selectedRoles.Contains(p))
+        {
+            <input  type="checkbox"  checked name="selectedRoles" value="@p"> @p
+        }
+        else
+        {
+            <input  type="checkbox"  name="selectedRoles" value="@p"> @p
+        }
+    </li>
+    
+    }
+    <input  type="hidden"  name="userName" value=" @Model.UserName"> 
+   
+    
+    <p>
+        <input type="submit" value="Assign Roles" />
+    </p>
+}

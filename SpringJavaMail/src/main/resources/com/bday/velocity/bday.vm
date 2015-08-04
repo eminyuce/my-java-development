@@ -1,0 +1,28 @@
+<html>
+<body>
+<table width="80%" border="0" cellspacing="0" cellpadding="160"
+       background="http://reikihelp.com/blog/wp-content/uploads/2009/07/Blog-Birthday-Balloons.jpg">
+<tr>
+    <td>
+      <p>
+      <h3>Dear ${user.name}, </h3>
+      <h4>       Many Many Happy returns of the Day!   </h4>
+
+      </p>
+    </td>
+  </tr>
+  <tr>
+    Please send your personal note to ${user.name} <a href="mailto:${user.email}">Here</a>.
+  </tr>
+    <tr>
+        <td>
+            Adres
+
+        </td>
+
+    </tr>
+</table>
+
+</body>
+
+</html>

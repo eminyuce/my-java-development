@@ -1,0 +1,67 @@
+USE [julia_knits]
+GO
+/****** Object:  StoredProcedure [dbo].[GetSearchResult]    Script Date: 10/26/2012 11:24:54 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER OFF
+GO
+
+
+
+/****** Object:
+declare @id int
+exec [dbo].[GetSearchResult] 2, '34','2','-1','2','10/24/2012','10/24/2012','10/24/2012','10/24/2012','10/24/2012','10/24/2012','100',0,0,0,0
+ 
+ 
+ exec [dbo].[GetSearchResult] 2, '34',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0
+ 
+  exec [dbo].[GetSearchResult] 2, '34',NULL,'-1',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,0,0,0
+ 
+
+select * From [dbo].[system_keys]
+ ******/
+ALTER proc [dbo].[GetSearchResult]
+	(
+	@poType  INT = NULL,
+	@styleNumber NVARCHAR(50) = NULL, 					
+	@customerStyleNumber  NVARCHAR(50) = NULL, 
+	@customerName 	NVARCHAR(50),
+	@customerOrderNumber  NVARCHAR(50) = NULL, 	
+	@createdDateFrom NVARCHAR(50) = NULL,
+    @createdDateTo NVARCHAR(50) = NULL,	 					
+	@dueDateFrom NVARCHAR(50) = NULL,					
+	@dueDateTo NVARCHAR(50) = NULL,
+	@cancelDateFrom  NVARCHAR(50) = NULL,				
+	@cancelDateTo  NVARCHAR(50) = NULL,					
+	@totalPoAmount 	  NVARCHAR(50) = NULL, 				
+	@started 	BIT,				
+	@fitApproved 	BIT,					
+	@washTest 		BIT,				
+	@creditApproved   BIT
+	)
+as
+ --AND customer_id  = CASE WHEN @customerId = '-1' THEN customer_id ELSE CONVERT(INT,@customerId) END 
+	SELECT TOP 100 * FROM purchase_order AS p
+	  INNER JOIN customer AS c ON p.customer_id = c.customer_id
+	  WHERE  
+		purchase_order_number LIKE CONVERT(VARCHAR, @poType) + '%'  
+		AND style_number = COALESCE(@styleNumber, style_number)  
+		AND customer_style_number = COALESCE(@customerStyleNumber, customer_style_number)  
+		AND c.customer_nm  LIKE  '%' + ISNULL(@customerName, c.customer_nm )+ '%'  
+		AND customer_order_number = COALESCE(@customerOrderNumber, customer_order_number) 
+		AND po_created_date >= ISNULL(@createdDateFrom, po_created_date)
+		AND po_created_date < DATEADD(d, 1, ISNULL(@createdDateTo, po_created_date))
+		AND due_date >= ISNULL(@dueDateFrom, due_date)
+		AND due_date < DATEADD(d, 1, ISNULL(@dueDateTo, due_date))
+		AND cancel_date >= ISNULL(@cancelDateFrom, cancel_date)
+		AND cancel_date < DATEADD(d, 1, ISNULL(@cancelDateTo, cancel_date))
+		AND total_po_amount = COALESCE(@totalPoAmount, total_po_amount)
+		AND credit_approved = @creditApproved
+		AND wash_test_approved = @washTest
+		AND fit_approved = @fitApproved
+		AND started = @started
+		ORDER BY purchase_order_number
+
+ 
+
+

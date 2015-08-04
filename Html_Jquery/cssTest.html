@@ -1,0 +1,196 @@
+<html><head>
+
+<script type="text/javascript"  src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+
+
+
+<style type="text/css">
+BODY {
+background-color:#FF6666;
+
+}
+.memo 
+ {
+ text-align:right;
+ text-transform:uppercase
+  color:Red;
+ } 
+ B 
+ {
+ font:arial, helvetica 12px bold;
+ color:red; text-align:right 
+ }
+ B {
+ color:#000000; 
+ background-color:#FFCC00;
+ } 
+ B:hover{
+ color:blue; 
+ text-transform:uppercase;
+ text-decoration:underline overline; 
+ font-size:30px; 
+ cursor:pointer; 
+ font-weight:bold 
+ }
+ div li{
+ color:blue;
+ }
+.list1{
+ list-style: circle outside; color:green;
+ }
+.list1 span{
+ color:red;
+}
+.list2 
+{
+  font-weight:bold;
+} 
+.blacktext
+{
+  text-decoration:underline;
+}
+ .layer1{
+ position:relative;
+ font-size:50px;
+ z-index:2;
+ }
+ 
+ .layer2{
+ position:relative;
+ top:-50;
+ left:5;
+ color:red;
+ font-size:80px;
+ z-index:1
+ 
+ }
+ 
+ 
+ .layer3{
+ position:relative;
+ font-size:50px;
+ z-index:3;
+ }
+ 
+ .layer4{
+ position:relative;
+ top:-50;
+ left:-3;
+ color:red;
+ font-size:80px;
+ z-index:4
+ }
+ .visibleDiv
+ {
+	text-align:center;
+	color:blue;
+ }
+ .visibleOrNot
+ {
+	
+ }
+.xlink{
+	cursor:crosshair;
+	border-style:dashed dotted solid double;
+ }
+.hlink{
+	cursor:help;
+	border-style:double dotted solid dashed;
+ }
+ .wlink{
+	cursor:wait;
+	border-style:solid dotted double dashed;
+ }
+.plink{
+	cursor:pointer;
+	border-style:dotted solid double dashed;
+ }
+ a {
+	color:white;
+	padding-top:25px;
+	padding-bottom:25px;
+	padding-right:100px;
+	padding-left:100px;
+ }
+ #emin li
+ {
+    color:green;
+ }
+ .layer6:hover
+ {
+	color:blue;
+ }
+ .layer7{
+
+ }
+ .layer8{
+	text-transform:lowercase;
+ }
+ </style>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+ $("#msgid").html("This is Hello World by JQuery");
+ 
+$("p").css("color", "blue");  
+$("p").css("font-size", "1.2em");  
+$("p").text("Text changed!"); 
+
+});
+ 
+
+</script>
+
+</head>
+
+<body>
+<div class="memo"><b>This is a customized headline style bold</b></div>
+
+<div><li>Emin Yüce<li></div>
+<li>Bahattin Çetin</li>
+
+
+<ul>
+<li class="list1"><span class="blacktext">This is one black line</span>
+<li class="list1">This is another line that is much longer than the first. But it isn't a black line since we did not specify a style for the text that goes here other than the style we defined for the list.
+</ul>
+<br>
+<br>
+<ul>
+<li class="list2"><span class="blacktext">This is one black line</span>
+<li class="list2">This is another line that is much longer than the first. But it isn't a black line since we did not specify a style for the text that goes here other than the style we defined for the list.
+
+</ul>
+
+
+
+LAYER 1 ON TOP:
+<div class="layer1">LAYER 1</div>
+<div class="layer2">LAYER 2</div>
+
+LAYER 2 ON TOP:
+<div class="layer3">LAYER 1</div>
+<div class="layer4">LAYER 2</div>
+
+<div class="visibleDiv"><span class="visibleOrNot">NEDIR BUUU ALOOO</span></div>
+
+
+
+<a href="mypage.htm" class="xlink">CROSS LINK</a>
+<a href="mypage.htm" class="hlink">HELP LINK</a>
+<a href="mypage.htm" class="plink">CROSS LINK</a>
+<a href="mypage.htm" class="wlink">HELP LINK</a>
+
+
+<div id="emin" class="layer5"><li>LAYER 5</li>
+<div class="layer6"><li>LAYER 6</li></div>
+<div class="layer7"><li>LAYER 7</li></div>
+<div class="layer8"><li>LAYER 8</li></div>
+</div>
+
+<p>LAYER 5<p>
+
+<br>
+</body></html>

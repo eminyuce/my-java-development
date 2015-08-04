@@ -1,0 +1,43 @@
+﻿@model MvcSimpleMembershipManagement.Helpers.PaginatedList<String>
+
+@{
+    ViewBag.Title = "All Roles";
+}
+
+<h2>All Roles</h2>
+@{
+    var roles = Model; 
+}
+<p>
+    @Html.ActionLink("Create New Role", "CreateOrEditRole")
+</p>
+
+@using (Html.BeginForm("Index", "UserRole"))
+{
+    <input type="text"  name="searchItem" value='@Request.QueryString["searchItem"]'/>
+    <input type="submit" value="search" class="myButton" name="search" />
+    <br />
+    <table>
+        <tr>
+            <th>
+               Roles
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in roles)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteRole", new { id = item, page=Model.PageIndex },  
+                    new { onclick = String.Format("return confirm('Are you sure you want to delete {0}?');", item) }) 
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+@Html.Partial("PaginatedListFooter", roles, new ViewDataDictionary(ViewData) { { "searchItem", Request.QueryString["searchItem"] } })

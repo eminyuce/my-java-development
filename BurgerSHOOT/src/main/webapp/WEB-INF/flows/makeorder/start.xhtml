@@ -1,0 +1,30 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<div><h:form id="goToListProducts">
+			<h:messages styleClass="searchname" />	
+			<h:selectOneListbox id="productTypeList" value="#{productCriteria.productType}" size="1" 
+			converter="webflow.ProductTypeConvertor">
+				<f:selectItems value="#{productManager.productTypesItemList}">
+			</f:selectItems>
+			<h:commandButton id="submitButton" action="list-products" value="OK"></h:commandButton>
+			<h:message for="productTypeList"></h:message>
+		</h:selectOneListbox>
+		</h:form>
+		</div>
+	</ui:define>
+
+	<ui:define name="side-menu">
+		<a href="start.xhtml#" class="morelink">Selam</a>
+		<a href="start.xhtml#" class="morelink">Kelam</a>
+	</ui:define>
+
+
+</ui:composition>

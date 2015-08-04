@@ -1,0 +1,303 @@
+USE [Miscellaneous]
+GO
+/****** Object:  StoredProcedure [dbo].[gas_mnt_MatchGNToStoriesNewsEngine]    Script Date: 02/04/2014 11:08:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- [gas_mnt_MatchGNToStoriesNewsEngine] 1970847
+-- 
+-- select * FROM [Miscellaneous].[dbo].[ga_Pages] p where PagePath like '%News/363656.aspx%'
+-- select * FROM [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc] t1 where StoryId=363656
+
+--gas_mnt_MatchGNToStoriesMProfBlogs
+
+--gas_mnt_MatchGNToStoriesNewsEngine
+ALTER PROCEDURE [dbo].[gas_mnt_MatchGNToStoriesNewsEngine]
+	 @ProfileID int = 21816736
+AS
+BEGIN
+	-- DECLARE @ProfileID int = 21816736
+	DECLARE @PagePathFilter nvarchar(250) = '/news/%'
+	
+	DECLARE @NwmSourceId INT
+	SELECT @NwmSourceId = NwmSourceId  FROM gas_Sources WHERE Source='[sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc]'
+	IF ISNULL(@NwmSourceId,0)=0
+	BEGIN
+		INSERT INTO gas_Sources(Source)
+		VALUES('[sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc]')
+		SET @NwmSourceId=SCOPE_IDENTITY()
+	END
+	
+	
+ 
+
+	SELECT p.*
+	     ,@NwmSourceId NwmSourceId
+		,CASE WHEN CHARINDEX('.aspx?',[PagePath]) > 0
+			THEN RIGHT(REPLACE(SUBSTRING([PagePath],1,CHARINDEX('.aspx',[PagePath])-1), '.aspx', ''),6)    
+			ELSE RIGHT(REPLACE([PagePath], '.aspx', ''),6)   
+		 END as StoryID 
+  INTO #tmp FROM [Miscellaneous].[dbo].[ga_Pages] p 
+  LEFT OUTER JOIN gas_StoryPages as sp on p.PageId=sp.PageId
+  WHERE sp.PageId IS NULL AND [ProfileId]=@ProfileID and [PagePath] LIKE @PagePathFilter AND 
+        1 = CASE  WHEN CHARINDEX('.aspx?',[PagePath]) > 0
+		THEN ISNUMERIC(RIGHT(REPLACE(SUBSTRING([PagePath],1,CHARINDEX('.aspx',[PagePath])-1), '.aspx', ''),6))     
+		ELSE ISNUMERIC(RIGHT(REPLACE([PagePath], '.aspx', ''),6))   
+		END
+ 
+  SELECT    t1.StoryID,t1.[DateCreated],t1.[Title],t1.CreatorName Author, p.NwmSourceId, p.PageId 
+	INTO #Records FROM [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc] t1 
+	INNER JOIN #tmp  
+	p on  t1.StoryID=p.StoryID
+ 
+	 
+    -- SELECT StoryID,NwmSourceId,  count(*)   from #Records group by  StoryID,NwmSourceId having  count(*) > 1
+	-- SELECT * from #Records order by StoryID
+	-- SELECT  StoryID,  count(*)   from  [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc]   group by  StoryID having  count(*) > 1
+	 
+	  
+ 
+ 	INSERT INTO gas_Authors (Name)
+	SELECT  distinct r.Author FROM #Records as r LEFT OUTER JOIN  gas_Authors as a on r.Author = a.Name where a.Name is NULL
+	
+	 
+	INSERT INTO [dbo].[gas_Stories]
+           ([AuthorId]
+           ,[DateCreated]
+           ,[Title]
+           ,NwmSourceId
+           ,SourceId,
+           TypeId)
+	 SELECT a.AuthorId, r.DateCreated, r.Title, r.NwmSourceId, r.StoryId, 1 
+	 FROM 
+	 ( SELECT MAX(DateCreated) DateCreated, MAX(Title) Title, MAX(NwmSourceId) NwmSourceId, MAX(Author) Author, StoryId 
+	 FROM #Records r1
+	 GROUP BY StoryId ) r INNER JOIN gas_Authors a on r.Author = a.Name
+	LEFT OUTER JOIN gas_Stories as sp on r.StoryId = sp.SourceId 
+	where   sp.StoryId  is  null
+	 
+ 
+	INSERT INTO  [dbo].[gas_StoryPages]
+           ([StoryId]
+           ,[PageId])
+	SELECT s.StoryId,r.PageId FROM  gas_Stories s
+		INNER JOIN #Records r	ON s.SourceId= r.StoryId
+		AND s.NwmSourceId=@NwmSourceId
+	 
+
+  
+
+  
+END
+
+
+
+USE [Miscellaneous]
+GO
+/****** Object:  StoredProcedure [dbo].[gas_mnt_MatchGNToStoriesMPropBlogs]    Script Date: 02/04/2014 11:09:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- gas_mnt_MatchGNToStories2 1970847
+-- 
+-- select * FROM [Miscellaneous].[dbo].[ga_Pages] p where PagePath like '%News/363656.aspx%'
+-- select * FROM [sql11\sql2008r2].[NewsEngine].[dbo].[StoriesLoc] t1 where StoryId=363656
+
+--gas_mnt_MatchGNToStoriesMProfBlogs
+
+--gas_mnt_MatchGNToStoriesNewsEngine
+ALTER PROCEDURE [dbo].[gas_mnt_MatchGNToStoriesMPropBlogs]
+ 
+AS
+BEGIN
+
+ 
+  
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	declare @ProfileId int = 36905957
+ 
+	 
+  
+	DECLARE @NwmSourceId INT
+	
+	SELECT @NwmSourceId = NwmSourceId  FROM gas_Sources WHERE Source='[SERVER0907\sql2008].[BlogEngine].[dbo].[mp27_Posts]'
+	IF ISNULL(@NwmSourceId,0)=0
+	BEGIN
+		INSERT INTO gas_Sources(Source)
+		VALUES('[SERVER0907\sql2008].[BlogEngine].[dbo].[mp27_Posts]')
+		SET @NwmSourceId=SCOPE_IDENTITY()
+	END
+	
+	
+	DECLARE @SourceID INT;
+	DECLARE @PageId INT;
+	DECLARE @PagePath nvarchar(500)
+	 
+	
+	
+	CREATE TABLE #Records  (PageId int, SourceId int, Title nvarchar(500), DateCreated datetime, Author nvarchar(200),NwmSourceId INT)
+ 
+	DECLARE @PagePathCursor CURSOR; 
+	SET @PagePathCursor  = CURSOR FOR SELECT p.PagePath,p.PageId
+		FROM ga_Pages as p	  LEFT OUTER JOIN gas_StoryPages as sp on p.PageId=sp.PageId
+				  WHERE sp.PageId IS NULL AND p.PagePath LIKE '/article/%'   AND  ProfileId=@ProfileId
+				  
+
+	OPEN @PagePathCursor  
+	FETCH NEXT FROM @PagePathCursor INTO @PagePath, @PageId
+	 
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN  
+	     		
+		SET NOCOUNT ON;
+		
+		INSERT INTO #Records (PageId, SourceId, Title, DateCreated, Author,NwmSourceId)
+		SELECT @PageId, PostRowID SourceId, Title, DateCreated, Author,@NwmSourceId     
+		FROM [SERVER0907\sql2008].[BlogEngine].[dbo].[mp27_Posts] where @PagePath LIKE '%'+slug+'%'
+				  
+		
+ 		FETCH NEXT FROM @PagePathCursor INTO  @PagePath, @PageId
+	END 
+	
+	
+	CLOSE @PagePathCursor  
+	DEALLOCATE @PagePathCursor
+
+	--  SELECT * FROM #Records
+    
+	INSERT INTO gas_Authors (Name)
+	SELECT  distinct r.Author FROM #Records as r LEFT OUTER JOIN  gas_Authors as a on r.Author = a.Name where a.Name is NULL
+	 
+	 INSERT INTO [dbo].[gas_Stories]
+           ([AuthorId]
+           ,[DateCreated]
+           ,[Title]
+           ,NwmSourceId
+           ,SourceId
+           ,TypeId)
+	 SELECT a.AuthorId, r.DateCreated, r.Title, r.NwmSourceId, r.SourceId,2 
+	 FROM 
+	 (
+	 SELECT MAX(DateCreated) DateCreated, MAX(Title) Title, MAX(NwmSourceId) NwmSourceId, MAX(Author) Author, SourceId 
+	 FROM #Records r1
+	 GROUP BY SourceId ) r INNER JOIN gas_Authors a on r.Author = a.Name
+	 
+	 
+	INSERT INTO  [dbo].[gas_StoryPages]
+           ([StoryId]
+           ,[PageId])
+	SELECT s.StoryId,r.PageId FROM  gas_Stories s
+		INNER JOIN #Records r	ON s.SourceId= r.SourceId
+		AND s.NwmSourceId=@NwmSourceId
+	 
+	 -- DELETE FROM  gas_StoryPages
+	 -- DELETE FROM  gas_Stories
+   
+	  	  DROP TABLE #Records 
+
+
+  
+END
+
+
+USE [Miscellaneous]
+GO
+/****** Object:  StoredProcedure [dbo].[gas_mnt_MatchGNToStoriesMProfBlogs]    Script Date: 02/04/2014 10:45:08 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER  PROCEDURE [dbo].[gas_mnt_MatchGNToStoriesMProfBlogs]
+	
+	
+	
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	declare @ProfileId int = 21816736
+ 
+	 
+  
+	DECLARE @NwmSourceId INT
+	
+	SELECT @NwmSourceId = NwmSourceId  FROM gas_Sources WHERE Source='[SERVER0907\sql2008].[MaritimeProfessional].[dbo].[vb_BlogPostas4GA]'
+	IF ISNULL(@NwmSourceId,0)=0
+	BEGIN
+		INSERT INTO gas_Sources(Source)
+		VALUES('[SERVER0907\sql2008].[MaritimeProfessional].[dbo].[vb_BlogPostas4GA]')
+		SET @NwmSourceId=SCOPE_IDENTITY()
+	END
+	
+	
+	DECLARE @SourceID INT;
+ 
+	 
+	
+	
+	CREATE TABLE #Records  (PageId int, SourceId int, Title nvarchar(500), DateCreated datetime, Author nvarchar(200),NwmSourceId INT)
+ 
+ 
+	INSERT INTO #Records (PageId, SourceId, Title, DateCreated, Author, NwmSourceId)
+	SELECT    p.PageId, b.blogpostID SourceId,	b.BlogPostTitle Title,	b.BlogPostDate CreatedDate,	ISNULL(b.FullName,'Unknown') Author, @NwmSourceId 
+ 		 FROM ga_Pages as p 
+		 			INNER JOIN [SERVER0907\sql2008].[MaritimeProfessional].[dbo].[vb_BlogPostas4GA] as b  ON  
+		 			 REPLACE(REPLACE(REPLACE(p.PagePath, '.aspx', ''),REVERSE(SUBSTRING(REVERSE(REPLACE(p.PagePath, '.aspx', '')), CHARINDEX('/', REVERSE(REPLACE(p.PagePath, '.aspx', '')))+1, 8000)),''),'/','') = b.NodeAlias  
+		 			LEFT OUTER JOIN gas_StoryPages sp on sp.PageId = p.PageId
+				 WHERE sp.PageId IS NULL AND   p.ProfileId=@ProfileId
+	
+	   
+    
+	INSERT INTO gas_Authors (Name)
+	SELECT  distinct r.Author FROM #Records as r LEFT OUTER JOIN  gas_Authors as a on r.Author = a.Name where a.Name is NULL
+	 
+	 INSERT INTO [dbo].[gas_Stories]
+           ([AuthorId]
+           ,[DateCreated]
+           ,[Title]
+           ,NwmSourceId
+           ,SourceId
+           ,TypeId)
+	 SELECT a.AuthorId, r.DateCreated, r.Title, r.NwmSourceId, r.SourceId,2 
+	 FROM 
+	 (
+	 SELECT MAX(DateCreated) DateCreated, MAX(Title) Title, MAX(NwmSourceId) NwmSourceId, MAX(Author) Author, SourceId 
+	 FROM #Records r1
+	 GROUP BY SourceId ) r INNER JOIN gas_Authors a on r.Author = a.Name
+	 
+	 
+	INSERT INTO  [dbo].[gas_StoryPages]
+           ([StoryId]
+           ,[PageId])
+	SELECT s.StoryId,r.PageId FROM  gas_Stories s
+		INNER JOIN #Records r	ON s.SourceId= r.SourceId
+		AND s.NwmSourceId=@NwmSourceId
+	 
+	 -- DELETE FROM  gas_StoryPages
+	 -- DELETE FROM  gas_Stories
+	 -- DELETE FROM  gas_Authors
+   
+	  	  DROP TABLE #Records 
+
+
+END
+
+
+
+ DECLARE @urls TABLE (URL varchar(2000))
+
+INSERT @urls VALUES ('/Blogs/Maritime-Security/June-2009/Underwater-Port-Security--Minimize-the-Threat.aspx')
+INSERT @urls VALUES ('/Blogs/Maritime-Security/June-2009/Underwater-Port-Security--Minimize-the-Threat.aspx')
+
+SELECT
+    REPLACE(REPLACE(REPLACE(URL, '.aspx', ''),REVERSE(SUBSTRING(REVERSE(REPLACE(URL, '.aspx', '')), CHARINDEX('/', REVERSE(REPLACE(URL, '.aspx', '')))+1, 8000)),''),'/','')
+FROM  
+    @urls
+
+

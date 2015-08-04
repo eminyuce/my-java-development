@@ -1,0 +1,144 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+       
+           <Button
+        android:id="@+id/btnXmlListButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Open Xml List" />
+           
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="@string/hello_world" />
+          
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="65dp"
+        android:layout_toLeftOf="@+id/textView1"
+        android:text="CheckBox" />
+
+    <Button
+        android:id="@+id/buttonImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/checkBox1"
+        android:layout_below="@+id/checkBox1"
+        android:layout_marginTop="27dp"
+        android:text="Button" />
+
+    <RadioButton
+        android:id="@+id/radioButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/checkBox1"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="19dp"
+        android:layout_marginRight="36dp"
+        android:text="RadioButton" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/buttonImage"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="38dp"
+        android:ems="10"
+        android:inputType="textPersonName" >
+
+        <requestFocus />
+    </EditText>
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@+id/radioButton1"
+        android:layout_below="@+id/radioButton1"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Female" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Male" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/buttonMainScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/radioButton1"
+        android:layout_below="@+id/radioGroup1"
+        android:text="Main Screen" />
+
+     <Button
+         android:id="@+id/buttonWebView"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/radioGroup1"
+         android:layout_below="@+id/editText1"
+         android:layout_marginTop="14dp"
+         android:text="WebView Screen" />
+
+     <Button
+         android:id="@+id/buttonJsonList"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/checkBox1"
+         android:layout_below="@+id/buttonWebView"
+         android:text="Json List" />
+
+     <Button
+         android:id="@+id/buttonTab"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignLeft="@+id/checkBox1"
+         android:layout_below="@+id/buttonImage"
+         android:text="Tab" />
+
+     <Button
+         android:id="@+id/buttonSearch"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignBaseline="@+id/buttonJsonList"
+         android:layout_alignBottom="@+id/buttonJsonList"
+         android:layout_toRightOf="@+id/textView1"
+         android:text="Search" />
+
+     <Button
+         android:id="@+id/buttonAddressButton"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/buttonJsonList"
+         android:layout_alignRight="@+id/btnXmlListButton"
+         android:text="Address Book" />
+
+     <Button
+         android:id="@+id/btnSendMail"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentTop="true"
+         android:layout_toLeftOf="@+id/radioGroup1"
+         android:text="Send Mail Activity" />
+
+</RelativeLayout>

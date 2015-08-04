@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+	<persistence-context />
+
+	<var name="userBackingBean" class="org.webflow.util.UserBackingBean" />
+
+	<on-start>
+		<evaluate expression="userService.createUser()" result="flowScope.user"></evaluate>
+	</on-start>
+
+	<view-state id="start" view="showEULA.xhtml">
+		<transition on="OK" to="enterDetails"></transition>
+		<transition on="Cancel" to="failure"></transition>
+	</view-state>
+
+	<view-state id="enterDetails" view="enterUserDetails.xhtml">
+		<transition on="OK" to="uploadImage"></transition>
+		<transition on="Back" to="start"></transition>
+		<transition on="Cancel" to="failure"></transition>
+	</view-state>
+	
+	<view-state id="uploadImage" view="uploadImage.xhtml">
+		<transition on="OK" to="addUser">
+			<set name="flowScope.user.image" value="fileUploadBean.file.data"></set>
+		</transition>
+		<transition on="Back" to="enterDetails"></transition>
+		<transition on="Cancel" to="failure"></transition>
+	</view-state>
+	
+
+	<action-state id="addUser">
+		<evaluate expression="userService.addUser(flowScope.user)"></evaluate>
+		<transition to="success"></transition>
+	</action-state>
+
+	<end-state id="success" commit="true" view="externalRedirect:/intro"></end-state>
+	<end-state id="failure" commit="false" view="externalRedirect:/intro"></end-state>
+</flow>

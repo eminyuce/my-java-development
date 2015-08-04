@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+
+
+	<persistence-context />
+	<var name="selectedProducts" class="java.util.ArrayList" />
+	<var name="productCriteria" class="org.webflow.util.ProductCriteria" />
+
+
+	<view-state id="start" view="viewProduct.xhtml">
+		<on-render>
+			<evaluate expression="productManager.getProducts()" result="viewScope.products"
+				result-type="org.springframework.faces.model.ManySelectionTrackingListDataModel"></evaluate>
+			
+		</on-render>
+		<transition on="CANCEL" to="finish"></transition>
+		<transition on="EDIT" to="editProduct">
+			<set name="flowScope.product_id" type="int" value="requestParameters.id"></set>
+		</transition>
+		<transition on="DETAILS" to="detailProduct">
+			<set name="flowScope.product_id" type="int" value="requestParameters.id"></set>
+		</transition>
+		<transition on="DELETE" to="deleteAction">
+			<evaluate expression="selectedProducts.addAll(products.selections)"></evaluate>
+		</transition>
+		<transition on="ADD" to="addProduct">
+			<evaluate expression="productManager.getProduct()"
+				result-type="org.webflow.domain.Product" result="flowScope.newProduct" />
+		</transition>
+	</view-state>
+
+	<subflow-state id="detailProduct" subflow="details">
+		<input name="productId" value="requestParameters.id" />
+		<transition on="finish" to="start"></transition>
+	</subflow-state>
+
+
+	<view-state id="addProduct" view="addproduct.xhtml">
+		<transition on="CANCEL" to="finish"></transition>
+		<transition on="OK" to="createProduct"></transition>
+	</view-state>
+
+	<action-state id="createProduct">
+		<evaluate expression="productManager.saveProduct(flowScope.newProduct)" />
+		<transition to="start"></transition>
+	</action-state>
+
+
+	<action-state id="editProduct">
+		<evaluate expression="productManager.getProduct(flowScope.product_id)"
+				result-type="org.webflow.domain.Product" result="flowScope.editProduct" />
+		<transition to="editProduct_View"></transition>
+	</action-state>
+
+
+	<action-state id="deleteAction">
+		<evaluate expression="productManager.deleteSelectedProduct(selectedProducts)" />
+		<transition to="start"></transition>
+	</action-state>
+
+
+	<view-state id="editProduct_View" view="editProduct.xhtml">
+		<transition on="CANCEL" to="start"></transition>
+		<transition on="OK" to="editAction"></transition>
+	</view-state>
+
+
+	<action-state id="editAction">
+		<evaluate expression="productManager.editProduct(flowScope.editProduct)"  result-type="org.webflow.domain.Product" result="flowScope.editNewProduct"  />
+		<transition to="start"></transition>
+	</action-state>
+
+ 
+	<end-state id="finish" view="externalRedirect:/intro"></end-state>
+
+</flow>

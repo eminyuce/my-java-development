@@ -1,0 +1,145 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:form="http://www.springframework.org/tags/form"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+
+	<ui:define name="content">
+		<h:form id="confirm">
+
+			<rich:dataTable id="productTable" value="#{products}"
+				styleClass="#{richSkin}" var="prod">
+
+				<f:facet name="header">
+					<h:outputText value="Available Products"
+						styleClass="orangeBiggerCaption"></h:outputText>
+				</f:facet>
+
+				<h:column>
+					<f:facet name="header">
+						<h:outputText></h:outputText>
+					</f:facet>
+					<h:selectBooleanCheckbox value="#{products.currentRowSelected}"></h:selectBooleanCheckbox>
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="ID" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:outputText value="${prod.fldid}" styleClass="blackText"></h:outputText>
+				</h:column>
+
+
+
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Name" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:outputText value="${prod.fldname}" styleClass="reddishText"></h:outputText>
+				</h:column>
+
+		       <h:column>
+					<f:facet name="header">
+						<h:outputText value="Product Type" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:outputText value="${prod.producttype.fldname}" styleClass="blackText"></h:outputText>
+				</h:column>
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Description" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:outputText value="${prod.flddesc}" styleClass="reddishText"></h:outputText>
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="calorie" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:outputText value="${prod.calorie}" styleClass="reddishText"></h:outputText>
+				</h:column>
+
+
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="calcium" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:outputText value="${prod.calcium}" styleClass="reddishText"></h:outputText>
+				</h:column>
+
+
+				<h:column>
+					<f:facet name="header">
+						<h:outputText value="Details" styleClass="blueCaption"></h:outputText>
+					</f:facet>
+
+					<h:commandLink action="DETAILS" value="Details">
+						<f:param name="id" value="#{prod.fldid}"></f:param>
+					</h:commandLink>
+				</h:column>
+
+				<h:column>
+					<f:facet name="header">
+
+					</f:facet>
+
+					<h:commandLink action="EDIT" value="EDIT">
+						<f:param name="id" value="#{prod.fldid}"></f:param>
+					</h:commandLink>
+				</h:column>
+
+			</rich:dataTable>
+
+
+			<h:commandButton styleClass="detailsSubmit" action="CANCEL"
+				value="Return Main Page"></h:commandButton>
+
+			<h:commandButton styleClass="detailsSubmit" action="ADD"
+				value="Add New product"></h:commandButton>
+
+
+			<a4j:commandButton value="Delete Selected Product"
+				onclick="#{rich:component('confirmation')}.show();return false" />
+
+			<a4j:jsFunction name="submit" action="DELETE" />
+
+
+
+
+			<rich:modalPanel id="confirmation" width="250" height="150">
+				<f:facet name="header">Confirmation</f:facet>
+				<h:panelGrid>
+					<h:panelGrid columns="2">
+						<h:graphicImage value="/images/alert.gif" />
+						<h:outputText value="Are you sure?"
+							style="FONT-SIZE: large; text-align: center" />
+					</h:panelGrid>
+					<h:panelGroup>
+						<h:commandButton styleClass="detailsSubmit" action="DELETE"
+							value="OK"
+							onclick="#{rich:component('confirmation')}.hide();submit();return false"></h:commandButton>
+						<h:commandButton styleClass="detailsSubmit" value="Cancel"
+							onclick="#{rich:component('confirmation')}.hide();return false"></h:commandButton>
+
+					</h:panelGroup>
+				</h:panelGrid>
+			</rich:modalPanel>
+
+
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

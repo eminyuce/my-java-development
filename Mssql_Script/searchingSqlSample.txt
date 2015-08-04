@@ -1,0 +1,270 @@
+USE [Directory]
+GO
+/****** Object:  StoredProcedure [dbo].[mt_SearchCompanies]    Script Date: 02/21/2014 15:41:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ /*
+
+DECLARE @filter AS dbo.mt_tpt_Filter
+ 
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('Category','Consulting','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('country','United States','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('Brand','foruno','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('state','New York','')
+
+--INSERT INTO @filter (FieldName, ValueFirst, ValueLast) VALUES('city','Tuzla-Istanbul','')
+
+exec [dbo].[mt_SearchCompanies] 
+@search = 'Maritime', 
+@top = 20, 
+@skip = 0, 
+@filter= @filter
+
+*/
+ALTER PROCEDURE [dbo].[mt_SearchCompanies]
+	@search nvarchar(200)='',
+	@top int=20,
+	@skip int=0,
+	@filter AS dbo.mt_tpt_Filter Readonly
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	
+	CREATE TABLE #recordFound (CompanyId int, FiltersMatched int)
+	
+	-- SELECT CompanyId FROM mt_Companies WHERE CompanyRank > 0 
+
+INSERT INTO #recordFound (CompanyId, FiltersMatched)
+SELECT CompanyId, 0 FROM mt_Companies  WHERE  CompanyRank > 0 and IsActive = 1
+
+
+-- select * from #recordFound
+
+DECLARE @FieldName VARCHAR(100)
+DECLARE @ValueFirst VARCHAR(100)
+
+DECLARE cFilters CURSOR FOR  
+SELECT FieldName, ValueFirst
+FROM @filter
+
+
+OPEN cFilters  
+FETCH NEXT FROM cFilters INTO @FieldName,  @ValueFirst 
+
+
+Declare @companyType nvarchar(255)
+Declare @brand nvarchar(255)
+Declare @country nvarchar(255)
+Declare @state nvarchar(255)
+Declare @city nvarchar(255)	
+	 
+set @companyType = NULL 
+set @brand = NULL 
+set @country = NULL 
+set @state = NULL 
+set @city = NULL 
+ 
+		
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+
+	print @FieldName
+	
+	IF @FieldName='Category'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT   cb.CompanyId
+			FROM         mt_Categories b INNER JOIN
+						 mt_CompaniesCategories cb ON b.CategoryId = cb.CategoryId
+			WHERE b.Name=@ValueFirst
+		  ) m
+		  ON rf.CompanyId = m.CompanyId
+		  set @companyType = @ValueFirst 
+	END
+	
+	
+	    
+	IF @FieldName='State'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT ParentItemId
+			FROM mt_Locations
+			WHERE State=@ValueFirst and EntityTypeId = 1
+			
+
+		  ) m
+		  ON rf.CompanyId = m.ParentItemId
+		  
+		  set @state = @ValueFirst 
+		  
+		
+	END
+	
+	
+	
+	IF @FieldName='Country'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT ParentItemId
+			FROM mt_Locations
+			WHERE Country=@ValueFirst and EntityTypeId=1
+
+		  ) m
+		  ON rf.CompanyId = m.ParentItemId
+		  
+		  set @country = @ValueFirst 
+		 
+	END
+	
+	
+	
+	IF @FieldName='City'
+	BEGIN
+		UPDATE rf
+			SET FiltersMatched=FiltersMatched+1
+		FROM 
+		 #recordFound rf 
+		 INNER JOIN 
+		 (
+			SELECT DISTINCT ParentItemId
+			FROM mt_Locations
+			WHERE City =  @ValueFirst
+
+		  ) m
+		  ON rf.CompanyId = m.ParentItemId
+		  
+		 set @city = @ValueFirst 
+	END
+ 
+		
+	-- TO DO: Add Other filters
+	
+	
+	FETCH NEXT FROM cFilters INTO @FieldName,  @ValueFirst 
+
+END  
+
+CLOSE cFilters  
+DEALLOCATE cFilters 
+
+DELETE FROM #recordFound 
+WHERE FiltersMatched<(SELECT COUNT(*) FROM @filter)
+
+
+CREATE TABLE #recordFound2 (CompanyId int, rowNumber int)
+
+
+		
+				
+				
+		IF (LEN (ISNULL(@search,''))>0)  
+		BEGIN
+					SET NOCOUNT ON;
+					
+				INSERT INTO  #recordFound2 (CompanyId , rowNumber )
+				SELECT rf.CompanyId , 	ROW_NUMBER() OVER (ORDER BY [RANK] DESC, rf.CompanyID) AS rowNumber 
+				FROM #recordFound rf INNER JOIN
+				(
+			    SELECT s.ItemId as CompanyId, ft.[RANK] as [RANK] 
+				FROM  mt_Search s  
+				INNER JOIN 	FREETEXTTABLE (dbo.[mt_Search], *, @search) ft ON s.[SearchId]=ft.[Key]
+				WHERE s.EntityTypeId=1
+				) fts
+				ON rf.CompanyId=fts.CompanyId
+				order by rowNumber
+		END
+		ELSE
+		BEGIN
+			
+			INSERT INTO  #recordFound2 (CompanyId , rowNumber )
+			SELECT c.CompanyId, 	ROW_NUMBER() OVER (ORDER BY c.CompanyId) AS rowNumber 
+				FROM #recordFound rf
+				INNER join mt_Companies c
+					ON rf.CompanyId=c.CompanyId
+			order by rowNumber
+		
+		END
+		
+		
+ SELECT c.*			 
+		FROM #recordFound2 rf
+				INNER join mt_Companies c ON rf.CompanyId=c.CompanyId
+			WHERE rf.rowNumber BETWEEN @skip+1 AND @skip+@top 
+		order by c.CompanyRank desc, rf.rowNumber desc
+		
+		DECLARE @RC INT
+		SET @RC=@@RowCount
+				 
+
+		SELECT * 
+			FROM
+			(	
+				SELECT  'category' as FieldName,c.Name   as ValueFirst,'' as ValueLast,Count(*) cnt, 10 ord   
+				FROM        mt_CompaniesCategories ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.CompanyId
+				inner join mt_Categories c on ct.CategoryId = c.CategoryId
+				 where  c.IsActive = 1
+				group by c.Name
+					
+					UNION
+									
+				SELECT  'country' as FieldName,CAST(ct.country as varchar)   as ValueFirst,'' as ValueLast,Count(*) cnt, 20 ord   
+				FROM        mt_Locations ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.ParentItemId
+                where ct.EntityTypeId = 1   and ct.IsActive = 1
+				group by ct.country
+				HAVING ct.country <>''
+				
+					UNION
+					
+				SELECT  'state' as FieldName,CAST(ct.state as varchar)   as ValueFirst,'' as ValueLast,Count(*) cnt, 30 ord   
+				FROM        mt_Locations ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.ParentItemId
+                where ct.EntityTypeId = 1  and ct.IsActive = 1
+                group by ct.state	
+				HAVING ct.state <>''
+			
+				UNION
+				
+				SELECT  'city' as FieldName,CAST(ct.city as varchar)   as ValueFirst,'' as ValueLast,Count(*) cnt, 40 ord   
+				FROM        mt_Locations ct
+				INNER JOIN #recordFound2 rf on rf.CompanyId=ct.ParentItemId
+                where ct.EntityTypeId = 1  and ct.IsActive = 1
+                group by ct.city
+				HAVING ct.city <>''
+				
+				--select * from dbo.med_v_LocationActive  where CompanyId = 107178
+				
+ ) AS E ORDER BY ord
+
+				
+		SELECT COUNT(*) RecordsTotal, @skip+1 recordFirst,  @skip+@top recordLast, @RC recordCount
+		FROM #recordFound2 
+
+
+    
+END
+

@@ -1,0 +1,177 @@
+//Table Name :  actor 
+entity jpa --class ~.domain.actor --activeRecord false --equals --testAutomatically   
+field  number --fieldName actor_id  --notNull --type java.lang.Integer 
+field  string --fieldName first_name --sizeMax 45 --notNull --type java.lang.String  
+field  string --fieldName last_name --sizeMax 45 --notNull --type java.lang.String  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  actor_info 
+entity jpa --class ~.domain.actor_info --activeRecord false --equals --testAutomatically   
+field  number --fieldName actor_id  --notNull --type java.lang.Integer 
+field  string --fieldName first_name --sizeMax 45 --notNull --type java.lang.String  
+field  string --fieldName last_name --sizeMax 45 --notNull --type java.lang.String  
+field  string --fieldName film_info --sizeMax 65535 --Null --type java.lang.String  
+//Table Name :  address 
+entity jpa --class ~.domain.address --activeRecord false --equals --testAutomatically   
+field  number --fieldName address_id  --notNull --type java.lang.Integer 
+field  string --fieldName address --sizeMax 50 --notNull --type java.lang.String  
+field  string --fieldName address2 --sizeMax 50 --Null --type java.lang.String  
+field  string --fieldName district --sizeMax 20 --notNull --type java.lang.String  
+field  number --fieldName city_id  --notNull --type java.lang.Integer 
+field  string --fieldName postal_code --sizeMax 10 --Null --type java.lang.String  
+field  string --fieldName phone --sizeMax 20 --notNull --type java.lang.String  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  category 
+entity jpa --class ~.domain.category --activeRecord false --equals --testAutomatically   
+field  number --fieldName category_id  --notNull --type java.lang.Integer 
+field  string --fieldName name --sizeMax 25 --notNull --type java.lang.String  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  city 
+entity jpa --class ~.domain.city --activeRecord false --equals --testAutomatically   
+field  number --fieldName city_id  --notNull --type java.lang.Integer 
+field  string --fieldName city --sizeMax 50 --notNull --type java.lang.String  
+field  number --fieldName country_id  --notNull --type java.lang.Integer 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  country 
+entity jpa --class ~.domain.country --activeRecord false --equals --testAutomatically   
+field  number --fieldName country_id  --notNull --type java.lang.Integer 
+field  string --fieldName country --sizeMax 50 --notNull --type java.lang.String  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  customer 
+entity jpa --class ~.domain.customer --activeRecord false --equals --testAutomatically   
+field  number --fieldName customer_id  --notNull --type java.lang.Integer 
+field  number --fieldName store_id  --notNull --type java.lang.Integer 
+field  string --fieldName first_name --sizeMax 45 --notNull --type java.lang.String  
+field  string --fieldName last_name --sizeMax 45 --notNull --type java.lang.String  
+field  string --fieldName email --sizeMax 50 --Null --type java.lang.String  
+field  number --fieldName address_id  --notNull --type java.lang.Integer 
+field  number --fieldName active  --notNull --type java.lang.Integer 
+field  date --fieldName create_date  --notNull --type java.util.Date 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  customer_list 
+entity jpa --class ~.domain.customer_list --activeRecord false --equals --testAutomatically   
+field  number --fieldName ID  --notNull --type java.lang.Integer 
+field  string --fieldName name --sizeMax 91 --Null --type java.lang.String  
+field  string --fieldName address --sizeMax 50 --notNull --type java.lang.String  
+field  string --fieldName zip code --sizeMax 10 --Null --type java.lang.String  
+field  string --fieldName phone --sizeMax 20 --notNull --type java.lang.String  
+field  string --fieldName city --sizeMax 50 --notNull --type java.lang.String  
+field  string --fieldName country --sizeMax 50 --notNull --type java.lang.String  
+field  string --fieldName notes --sizeMax 6 --notNull --type java.lang.String  
+field  number --fieldName SID  --notNull --type java.lang.Integer 
+//Table Name :  film 
+entity jpa --class ~.domain.film --activeRecord false --equals --testAutomatically   
+field  number --fieldName film_id  --notNull --type java.lang.Integer 
+field  string --fieldName title --sizeMax 255 --notNull --type java.lang.String  
+field  string --fieldName description --sizeMax 65535 --Null --type java.lang.String  
+field  null --fieldName release_year  --Null --type null 
+field  number --fieldName language_id  --notNull --type java.lang.Integer 
+field  number --fieldName original_language_id  --Null --type java.lang.Integer 
+field  number --fieldName rental_duration  --notNull --type java.lang.Integer 
+field  decimal --fieldName rental_rate  --notNull --type java.lang.Decimal 
+field  number --fieldName length  --Null --type java.lang.Integer 
+field  decimal --fieldName replacement_cost  --notNull --type java.lang.Decimal 
+field  null --fieldName rating --sizeMax 5 --Null --type null  
+field  null --fieldName special_features --sizeMax 54 --Null --type null  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  film_actor 
+entity jpa --class ~.domain.film_actor --activeRecord false --equals --testAutomatically   
+field  number --fieldName actor_id  --notNull --type java.lang.Integer 
+field  number --fieldName film_id  --notNull --type java.lang.Integer 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  film_category 
+entity jpa --class ~.domain.film_category --activeRecord false --equals --testAutomatically   
+field  number --fieldName film_id  --notNull --type java.lang.Integer 
+field  number --fieldName category_id  --notNull --type java.lang.Integer 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  film_list 
+entity jpa --class ~.domain.film_list --activeRecord false --equals --testAutomatically   
+field  number --fieldName FID  --Null --type java.lang.Integer 
+field  string --fieldName title --sizeMax 255 --Null --type java.lang.String  
+field  string --fieldName description --sizeMax 65535 --Null --type java.lang.String  
+field  string --fieldName category --sizeMax 25 --notNull --type java.lang.String  
+field  decimal --fieldName price  --Null --type java.lang.Decimal 
+field  number --fieldName length  --Null --type java.lang.Integer 
+field  null --fieldName rating --sizeMax 5 --Null --type null  
+field  string --fieldName actors --sizeMax 65535 --Null --type java.lang.String  
+//Table Name :  film_text 
+entity jpa --class ~.domain.film_text --activeRecord false --equals --testAutomatically   
+field  number --fieldName film_id  --notNull --type java.lang.Integer 
+field  string --fieldName title --sizeMax 255 --notNull --type java.lang.String  
+field  string --fieldName description --sizeMax 65535 --Null --type java.lang.String  
+//Table Name :  inventory 
+entity jpa --class ~.domain.inventory --activeRecord false --equals --testAutomatically   
+field  null --fieldName inventory_id  --notNull --type null 
+field  number --fieldName film_id  --notNull --type java.lang.Integer 
+field  number --fieldName store_id  --notNull --type java.lang.Integer 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  language 
+entity jpa --class ~.domain.language --activeRecord false --equals --testAutomatically   
+field  number --fieldName language_id  --notNull --type java.lang.Integer 
+field  null --fieldName name --sizeMax 20 --notNull --type null  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  nicer_but_slower_film_list 
+entity jpa --class ~.domain.nicer_but_slower_film_list --activeRecord false --equals --testAutomatically   
+field  number --fieldName FID  --Null --type java.lang.Integer 
+field  string --fieldName title --sizeMax 255 --Null --type java.lang.String  
+field  string --fieldName description --sizeMax 65535 --Null --type java.lang.String  
+field  string --fieldName category --sizeMax 25 --notNull --type java.lang.String  
+field  decimal --fieldName price  --Null --type java.lang.Decimal 
+field  number --fieldName length  --Null --type java.lang.Integer 
+field  null --fieldName rating --sizeMax 5 --Null --type null  
+field  string --fieldName actors --sizeMax 65535 --Null --type java.lang.String  
+//Table Name :  payment 
+entity jpa --class ~.domain.payment --activeRecord false --equals --testAutomatically   
+field  number --fieldName payment_id  --notNull --type java.lang.Integer 
+field  number --fieldName customer_id  --notNull --type java.lang.Integer 
+field  number --fieldName staff_id  --notNull --type java.lang.Integer 
+field  number --fieldName rental_id  --Null --type java.lang.Integer 
+field  decimal --fieldName amount  --notNull --type java.lang.Decimal 
+field  date --fieldName payment_date  --notNull --type java.util.Date 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  rental 
+entity jpa --class ~.domain.rental --activeRecord false --equals --testAutomatically   
+field  number --fieldName rental_id  --notNull --type java.lang.Integer 
+field  date --fieldName rental_date  --notNull --type java.util.Date 
+field  null --fieldName inventory_id  --notNull --type null 
+field  number --fieldName customer_id  --notNull --type java.lang.Integer 
+field  date --fieldName return_date  --Null --type java.util.Date 
+field  number --fieldName staff_id  --notNull --type java.lang.Integer 
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  sales_by_film_category 
+entity jpa --class ~.domain.sales_by_film_category --activeRecord false --equals --testAutomatically   
+field  string --fieldName category --sizeMax 25 --notNull --type java.lang.String  
+field  decimal --fieldName total_sales  --Null --type java.lang.Decimal 
+//Table Name :  sales_by_store 
+entity jpa --class ~.domain.sales_by_store --activeRecord false --equals --testAutomatically   
+field  string --fieldName store --sizeMax 101 --Null --type java.lang.String  
+field  string --fieldName manager --sizeMax 91 --Null --type java.lang.String  
+field  decimal --fieldName total_sales  --Null --type java.lang.Decimal 
+//Table Name :  staff 
+entity jpa --class ~.domain.staff --activeRecord false --equals --testAutomatically   
+field  number --fieldName staff_id  --notNull --type java.lang.Integer 
+field  string --fieldName first_name --sizeMax 45 --notNull --type java.lang.String  
+field  string --fieldName last_name --sizeMax 45 --notNull --type java.lang.String  
+field  number --fieldName address_id  --notNull --type java.lang.Integer 
+field  null --fieldName picture --sizeMax 65535 --Null --type null  
+field  string --fieldName email --sizeMax 50 --Null --type java.lang.String  
+field  number --fieldName store_id  --notNull --type java.lang.Integer 
+field  number --fieldName active  --notNull --type java.lang.Integer 
+field  string --fieldName username --sizeMax 16 --notNull --type java.lang.String  
+field  string --fieldName password --sizeMax 40 --Null --type java.lang.String  
+field  date --fieldName last_update  --notNull --type java.util.Date 
+//Table Name :  staff_list 
+entity jpa --class ~.domain.staff_list --activeRecord false --equals --testAutomatically   
+field  number --fieldName ID  --notNull --type java.lang.Integer 
+field  string --fieldName name --sizeMax 91 --Null --type java.lang.String  
+field  string --fieldName address --sizeMax 50 --notNull --type java.lang.String  
+field  string --fieldName zip code --sizeMax 10 --Null --type java.lang.String  
+field  string --fieldName phone --sizeMax 20 --notNull --type java.lang.String  
+field  string --fieldName city --sizeMax 50 --notNull --type java.lang.String  
+field  string --fieldName country --sizeMax 50 --notNull --type java.lang.String  
+field  number --fieldName SID  --notNull --type java.lang.Integer 
+//Table Name :  store 
+entity jpa --class ~.domain.store --activeRecord false --equals --testAutomatically   
+field  number --fieldName store_id  --notNull --type java.lang.Integer 
+field  number --fieldName manager_staff_id  --notNull --type java.lang.Integer 
+field  number --fieldName address_id  --notNull --type java.lang.Integer 
+field  date --fieldName last_update  --notNull --type java.util.Date 

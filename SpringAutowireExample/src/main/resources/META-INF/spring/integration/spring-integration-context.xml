@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	 http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		 http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.alcatel.lucent" />
+
+
+	<bean
+		class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />
+
+	<bean name="hesaplamaBean" class="com.alcatel.lucent.HesaplamaImpl">
+	</bean>
+
+	<bean name="gelismisHesaplamaImpl" class="com.alcatel.lucent.GelismisHesaplamaImpl">
+	</bean>
+
+	<alias name="gelismisHesaplamaAlias" alias="gelismisHesaplama" />
+
+	<bean name="CustomerService" class="com.alcatel.lucent.CustomerService"
+		scope="prototype">
+
+	</bean>
+
+	<bean name="personA" class="com.alcatel.lucent.Person">
+		<property name="name" value="Emin Yüce"></property>
+		<property name="phoneNo" value="1"></property>
+	</bean>
+
+	<bean name="personB" class="com.alcatel.lucent.Person">
+		<property name="name" value="Serhat Akkuzu"></property>
+		<property name="phoneNo"  value="33"></property>
+	</bean>
+
+</beans>

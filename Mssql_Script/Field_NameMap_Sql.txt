@@ -1,0 +1,82 @@
+SELECT * FROM [julia_knits].[dbo].[FieldNameMap]
+ 
+BEGIN TRANSACTION;
+ 
+BEGIN TRY
+     INSERT INTO  [julia_knits].[dbo].[FieldNameMap] ([FieldNameKey], [FieldNameValue])
+ 
+     SELECT
+     DISTINCT COLUMN_NAME,
+     REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(dbo.udf_TitleCase(REPLACE(COLUMN_NAME, '_', ' ')), 'Nm', 'Name'), 'Dt', 'Date'), 'Cd', 'Code'), 'Id', 'ID'), 'Po', 'PO')
+     FROM
+                  INFORMATION_SCHEMA.COLUMNS
+                  WHERE TABLE_NAME in (SELECT
+                  OBJECT_NAME([so].[parent_obj]) AS [table_name]
+            FROM sysobjects AS [so]
+            INNER JOIN sysobjects AS so2 ON so.parent_obj = so2.Id
+            WHERE [so].[type] = 'TR') AND COLUMN_NAME NOT IN (
+           
+            SELECT column_name
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE OBJECTPROPERTY(OBJECT_ID(constraint_name), 'IsPrimaryKey') = 1
+AND table_name IN (SELECT
+                  OBJECT_NAME([so].[parent_obj]) AS [table_name]
+            FROM sysobjects AS [so]
+            INNER JOIN sysobjects AS so2 ON so.parent_obj = so2.Id
+            WHERE [so].[type] = 'TR'))
+    
+     
+END TRY
+BEGIN CATCH
+    SELECT
+        ERROR_NUMBER() AS ErrorNumber
+        ,ERROR_SEVERITY() AS ErrorSeverity
+        ,ERROR_STATE() AS ErrorState
+        ,ERROR_PROCEDURE() AS ErrorProcedure
+        ,ERROR_LINE() AS ErrorLine
+        ,ERROR_MESSAGE() AS ErrorMessage;
+ 
+    IF @@TRANCOUNT > 0
+        ROLLBACK TRANSACTION;
+END CATCH;
+ 
+IF @@TRANCOUNT > 0
+    COMMIT TRANSACTION;
+GO
+ 
+ 
+ 
+USE [julia_knits]
+GO
+/****** Object:  UserDefinedFunction [dbo].[udf_TitleCase]    Script Date: 02/21/2013 11:29:20 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER FUNCTION [dbo].[udf_TitleCase] (@InputString VARCHAR(4000) )
+RETURNS VARCHAR(4000)
+AS
+BEGIN
+DECLARE @Index INT
+DECLARE @Char CHAR(1)
+DECLARE @OutputString VARCHAR(255)
+SET @OutputString = LOWER(@InputString)
+SET @Index = 2
+SET @OutputString =
+STUFF(@OutputString, 1, 1,UPPER(SUBSTRING(@InputString,1,1)))
+WHILE @Index <= LEN(@InputString)
+BEGIN
+SET @Char = SUBSTRING(@InputString, @Index, 1)
+IF @Char IN (' ', ';', ':', '!', '?', ',', '.', '_', '-', '/', '&','''','(')
+IF @Index + 1 <= LEN(@InputString)
+BEGIN
+IF @Char != ''''
+OR
+UPPER(SUBSTRING(@InputString, @Index + 1, 1)) != 'S'
+SET @OutputString =
+STUFF(@OutputString, @Index + 1, 1,UPPER(SUBSTRING(@InputString, @Index + 1, 1)))
+END
+SET @Index = @Index + 1
+END
+RETURN ISNULL(@OutputString,'')
+END

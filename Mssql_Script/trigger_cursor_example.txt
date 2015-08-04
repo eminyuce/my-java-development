@@ -1,0 +1,44 @@
+USE [julia_knits]
+GO
+/****** Object:  Trigger [dbo].[PoSizeDeleted]    Script Date: 10/04/2012 13:49:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER TRIGGER [dbo].[PoSizeDeleted]
+ON [dbo].[po_size]
+AFTER UPDATE
+AS
+BEGIN
+	DECLARE @DeletedPoSizeId INT;
+	DECLARE @Po_Size_Color_RowCount INT;
+	DECLARE @SizeID CURSOR; 
+	
+	set @SizeID =CURSOR FOR SELECT po_size_id FROM dbo.po_size WHERE is_deleted = 1 
+
+	OPEN @SizeID  
+	FETCH NEXT FROM @SizeID INTO @DeletedPoSizeId  
+
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN  
+	     SELECT @Po_Size_Color_RowCount = COUNT(po_size_color_id) FROM dbo.po_size_color 
+				WHERE po_size_id = @DeletedPoSizeId
+		
+		/* There is data related this po_size */
+		IF @Po_Size_Color_RowCount <> 0
+		BEGIN
+			DELETE FROM po_size_color WHERE po_size_id = @DeletedPoSizeId			
+		END
+ 
+ 		FETCH NEXT FROM @SizeID INTO @DeletedPoSizeId  
+	END 
+	
+	DELETE FROM po_size WHERE is_deleted = 1
+	
+	
+CLOSE @SizeID  
+DEALLOCATE @SizeID
+
+	
+	
+END 

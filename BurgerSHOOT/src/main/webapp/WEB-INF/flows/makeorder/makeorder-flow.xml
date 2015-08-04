@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/webflow
+        http://www.springframework.org/schema/webflow/spring-webflow-2.0.xsd">
+	
+	<secured match="any" attributes="ROLE_USER"/>
+	
+	<var name="productCriteria" class="org.webflow.util.ProductCriteria" />
+	<var name="selectedProducts" class="java.util.ArrayList"/>
+	
+	<view-state id="start">
+		<transition on="list-products" to="listProducts"></transition>
+	</view-state>
+	
+	<view-state id="listProducts">
+		<on-render>
+			<evaluate expression="productManager.getProducts(productCriteria.productType)" result="viewScope.products" result-type="org.springframework.faces.model.ManySelectionTrackingListDataModel"></evaluate>
+		</on-render>
+		<transition on="review-order" to="reviewOrder" >
+			<evaluate expression="selectedProducts.addAll(products.selections)"></evaluate>
+		</transition>
+		<transition on="details" to="detailsFlow"></transition>
+	</view-state>
+	
+	<view-state id="reviewOrder">
+		<on-render>
+			<evaluate expression="selectedProducts" result="viewScope.productsToReview" result-type="dataModel"></evaluate>
+		</on-render>
+		
+		<transition on="OK" to="commitOrder">
+		</transition>
+		<transition on="remove" to="reviewOrder">
+			<evaluate expression="selectedProducts.remove(productsToReview.selectedRow)"/>
+		</transition>
+		<transition on="go-back" to="listProducts" />
+		<transition on="go-on" to="start" />
+		<transition on="Cancel"></transition>
+
+	</view-state>
+	
+	<subflow-state id="detailsFlow" subflow="details">
+		<input name="productId" value="requestParameters.id"/>
+		<transition on="finish" to="listProducts"></transition>
+	</subflow-state>
+	
+	<action-state id="commitOrder">
+		<evaluate expression="orderService.buyProducts(selectedProducts)"></evaluate>
+		<transition to="finish"></transition>
+	</action-state>	
+
+	<end-state id="finish" view="externalRedirect:/intro"></end-state>
+</flow>

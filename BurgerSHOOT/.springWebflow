@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<webflow-project-description>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.3.0.200912170948-RELEASE]]></pluginVersion>
+	<configs>
+		<config>
+			<file>WebContent/WEB-INF/flows/makeorder/makeorder-flow.xml</file>
+			<name><![CDATA[main-flow]]></name>
+		</config>
+		<config>
+			<file>WebContent/WEB-INF/flows/signup/signup-flow.xml</file>
+			<name><![CDATA[booking-flow]]></name>
+		</config>
+		<config>
+			<file>WebContent/WEB-INF/flows/details/details-flow.xml</file>
+			<name><![CDATA[details-flow]]></name>
+		</config>
+		<config>
+			<file>WebContent/WEB-INF/flows/addproduct/addproduct-flow.xml</file>
+			<name><![CDATA[addproduct]]></name>
+		</config>
+	</configs>
+</webflow-project-description>

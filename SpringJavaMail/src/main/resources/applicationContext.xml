@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+<!--    
+	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="birthdayWisherCronTrigger" />
+			</list>
+		</property>
+	</bean>
+	<bean id="birthdayWisherCronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail" ref="birthdayWisherJob" />
+		<property name="cronExpression" value="0 0/1 * * * ?" />
+	</bean>
+
+	<bean name="birthdayWisherJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="com.bday.notifier.job.BirthdayWisherJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="emailService" value-ref="emailService"></entry>
+			</map>
+		</property>
+	</bean>
+  -->
+	<bean id="emailService" class="com.bday.notifier.service.EmailService">
+		<property name="mailSender" ref="mailSender" />
+		<property name="velocityEngine" ref="velocityEngine" />
+	</bean>
+
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="defaultEncoding" value="UTF-8" />
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="465" />
+		<property name="protocol" value="smtps" />
+		<property name="username" value="newyorktayurdumuz@gmail.com" />
+		<property name="password" value="123.qqweasdzxc" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtps.auth">true</prop>
+				<prop key="mail.smtps.starttls.enable">true</prop>
+				<prop key="mail.smtps.debug">true</prop>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+				<prop key="mail.smtp.debug">true</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<props>
+				<prop key="resource.loader">class</prop>
+				<prop key="class.resource.loader.class">
+					org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+				</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="httpClientImpl" class="com.bday.notifier.service.impl.HttpClientImpl">
+
+	</bean>
+	
+	<bean id="emailValidator" class="com.bday.notifier.regex.EmailValidator">
+
+	</bean>
+
+
+
+
+</beans>

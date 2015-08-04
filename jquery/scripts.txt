@@ -1,0 +1,44 @@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    
+    
+
+    <script type="text/javascript">
+
+
+        $(function () {
+            validateEmailTextbox($("#Email"), $("#EmailErrorMessage"),"Email is not valid.");
+            
+         });
+         
+        function validateEmailTextbox($email,$errorMessage, errorMessageText) {
+            var result = validateEmail($email.val());
+            if (!result) {
+                $errorMessage.text(errorMessageText);
+            }
+
+            $email.on('blur', function () {
+                result = validateEmail($(this).val());
+                if (!result) {
+                    $errorMessage.text(errorMessageText);
+                } else {
+                    $errorMessage.text("");
+                }
+            });
+        }
+         function validateEmail(email)
+         {
+             var emailReg =  /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+             if (emailReg.test(email)) {
+                 return true;
+             } else {
+                 return false;
+             }
+             
+         }
+         
+    </script>
+}
+ 

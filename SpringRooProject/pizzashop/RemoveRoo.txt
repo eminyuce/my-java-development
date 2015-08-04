@@ -1,0 +1,8 @@
+import roo project
+exit roo shell
+refactoring --> push in, all method will be inside approaaite class
+Search --> File --> Replace all roo annoation with regular expression \n.*[@\.]Roo[^t_]+?.*$ inside all files with java extension with blank.
+Comment out ROO dependencies in pom.xml
+create .classpath with maven command : maven eclipse:clean eclipse:eclipse
+remove asceptJ library, right click the project and remove asceptJ
+

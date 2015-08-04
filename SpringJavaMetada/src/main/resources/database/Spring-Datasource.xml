@@ -1,0 +1,20 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
+	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${database.connection.driver}" />
+		<property name="url" value="${database.connection.url}" />
+		<property name="username" value="${database.connection.username}" />
+		<property name="password" value="${database.connection.password}" />
+	</bean>
+	
+
+
+     
+
+
+
+
+</beans>

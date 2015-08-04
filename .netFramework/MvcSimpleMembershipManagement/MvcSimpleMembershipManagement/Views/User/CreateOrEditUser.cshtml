@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "CreateOrEditUser";
+}
+
+<h2>Create User</h2>
+
+@using (Html.BeginForm()) {
+
+    <fieldset>
+        <legend>User</legend>
+
+        <div class="editor-label">
+            User Name 
+        </div>
+        <div class="editor-field">
+            <input type="text" name='UserName'>
+        </div>
+        <div class="editor-label">
+            Random Generated Password 
+        </div>
+        <div class="editor-field">
+          <input type="text" name='Password' value='@ViewBag.RandomPassword'>
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "GetAllUsers")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

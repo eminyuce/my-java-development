@@ -1,0 +1,35 @@
+﻿@model String
+
+@{
+    ViewBag.Title = "CreateOrEditRole";
+}
+
+<h2>Create Or Edit Role</h2>
+@{
+    ViewBag.Title = "Create Or Edit Role";
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Role</legend>
+        <div class="editor-label">
+           Role Name
+        </div>
+        <div class="editor-field">
+            @Html.Editor("roleName")
+        </div>
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

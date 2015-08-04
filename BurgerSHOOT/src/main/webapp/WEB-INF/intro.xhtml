@@ -1,0 +1,71 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<ui:composition xmlns:jsp="http://java.sun.com/JSP/Page"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:sec="http://www.springframework.org/security/tags"
+	xmlns:c="http://java.sun.com/jstl/core"
+	template="layouts/standard.xhtml">
+
+	<ui:define name="content">
+
+		<div class="section">
+
+		<div class="mid">
+		<div class="tick_head">Welcome to <span class="tick_head1">BurgerSHOT</span></div>
+
+		<div class="inner_banner">
+		<p class="worksheet">Delicious!</p>
+		<p><a href="intro.xhtml#" class="innerlink">Donec nonummy ligulaeporta</a> <a
+			href="intro.xhtml#" class="innerlink">Sagittis mauris quam </a><a href="intro.xhtml#"
+			class="innerlink">Scelerisque pede </a> <a href="intro.xhtml#" class="innerlink">Nec
+		molestie massa velit</a> <a href="intro.xhtml#" class="innerlink">Ante </a> <a
+			href="intro.xhtml#" class="innerlink">Duis tellus nibh</a></p>
+		</div>
+		</div>
+
+		</div>
+
+	</ui:define>
+
+
+	<ui:define name="side-menu">
+		<a href="makeorder" class="morelink">Make an Order<span
+			class="links_text"></span></a>
+		<a href="signup" class="morelink">Register<span class="links_text"></span></a>
+		<a href="addproduct" class="morelink">Add a New Product<span
+			class="links_text"></span></a>
+		<a href="intro.xhtml#" class="morelink">Say Hello<span class="links_text"></span></a>
+		<br />
+		<a href="intro.xhtml#" class="morelink">Feedback<span class="links_text"></span></a>
+		<br />
+	</ui:define>
+
+	<ui:define name="right_area">
+		<div class="right_area">
+		<div class="right_top"></div>
+		<div class="right_head">
+		<div class="morelinks_head">Latest Blogs</div>
+		</div>
+		<div class="right_links_area">
+		<div class="links_morearea"><a href="intro.xhtml#" class="morelink">Donec
+		nonummy<span class="links_text"> ligulaet</span></a> <a href="intro.xhtml#"
+			class="morelink">porta <span class="links_text">sagittis
+		mauris quam</span></a> <a href="intro.xhtml#" class="morelink">Scelerisque<span
+			class="links_text"> pede nec</span></a> <a href="intro.xhtml#" class="morelink">Molestie
+		<span class="links_text">onum</span></a> <br />
+		<a href="intro.xhtml#" class="morelink">Massa <span class="links_text">velit
+		quis ante</span></a> <br />
+		</div>
+		<div class="freeregistration">
+		<div align="center"><span class="free">Free</span> registration</div>
+		</div>
+		</div>
+		<div class="right_bottom"></div>
+		</div>
+	</ui:define>
+</ui:composition>

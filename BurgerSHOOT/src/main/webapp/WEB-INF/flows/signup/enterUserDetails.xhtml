@@ -1,0 +1,85 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<h:form id="userDetailForm">
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Enter User Details" />
+				</f:facet>
+				<rich:graphValidator>
+					<h:panelGrid columns="3">
+						<h:outputLabel value="Name" for="nameField"></h:outputLabel>
+						<h:inputText id="nameField" value="#{user.username}"
+						
+							validator="#{userBackingBean.validateName}">
+							<rich:ajaxValidator event="onblur" />
+						</h:inputText>
+						<rich:message for="nameField" errorLabelClass="ajax-error-label"
+							errorMarkerClass="ajax-error-marker">
+							<f:facet name="errorMarker">
+								<h:outputText value="&amp;nbsp;"  escape="false"/>
+							</f:facet>
+						</rich:message>
+
+						<h:outputLabel value="Password" for="passField"></h:outputLabel>
+						<h:inputText id="passField" value="#{user.password}"
+							validator="#{userBackingBean.validatePassword}">
+							<rich:ajaxValidator event="onblur" />
+						</h:inputText>
+						<rich:message for="passField" errorLabelClass="ajax-error-label"
+							errorMarkerClass="ajax-error-marker">
+							<f:facet name="errorMarker">
+								<h:outputText value="&amp;nbsp;" escape="false"/>
+							</f:facet>
+						</rich:message>
+
+						<h:outputLabel value="Email" for="emailField"></h:outputLabel>
+						<h:inputText id="emailField" value="#{user.email}"
+							validator="#{userBackingBean.validateEmail}">
+							<rich:ajaxValidator event="onblur" />
+						</h:inputText>
+						
+						<rich:message for="emailField" errorLabelClass="ajax-error-label"
+							errorMarkerClass="ajax-error-marker">
+							<f:facet name="errorMarker">
+								<h:outputText value="&amp;nbsp;" escape="false" />
+							</f:facet>
+						</rich:message>
+
+						<h:outputLabel value="Date of Birth" for="birthField"></h:outputLabel>
+						<rich:calendar id="birthField" value="#{user.dob}"
+							validator="#{userBackingBean.validateDOB}">
+						</rich:calendar>
+						
+						<rich:message for="birthField" errorLabelClass="ajax-error-label"
+							errorMarkerClass="ajax-error-marker">
+							<f:facet name="errorMarker">
+								<h:outputText value="&amp;nbsp;" escape="false"/>
+							</f:facet>
+						</rich:message>
+					</h:panelGrid>
+
+					<h:commandButton value="OK" action="OK"></h:commandButton>
+					<h:commandButton value="Cancel" immediate="true" action="Cancel"></h:commandButton>
+
+				</rich:graphValidator>
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="side-menu">
+		<a href="enterUserDetails.xhtml#" class="morelink">Selam</a>
+		<a href="enterUserDetails.xhtml#" class="morelink">Kelam</a>
+	</ui:define>
+
+</ui:composition>
+

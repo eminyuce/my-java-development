@@ -1,0 +1,9 @@
+ $("#grid").igGrid({
+               columns: [
+                   { headerText: "Product ID", key: "$columnName1", dataType: "$typeName1" },
+                   { headerText: "Product Name", key: "$columnName2", dataType: "$typeName2" },
+                   { headerText: "Product Number", key: "$columnName3", dataType: "$typeName3" }
+               ],
+               width: "500px",
+               dataSource: products
+           });

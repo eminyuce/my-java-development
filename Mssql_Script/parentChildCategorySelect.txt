@@ -1,0 +1,56 @@
+WITH CategoryList AS
+(SELECT [CategoryId]
+      ,[CategoryParentId]
+      ,[Name]
+      ,1 as CategoryLevel
+         ,     dbo.LeadingZeros((ROW_NUMBER() OVER (ORDER BY   [Name])),3) rowNumber
+  FROM [Miscellaneous].[dbo].[se_Categories]
+  WHERE [SiteId]=5 AND [CategoryParentId]=0
+  
+  UNION ALL
+  
+  SELECT C.[CategoryId]
+      ,C.[CategoryParentId]
+      ,C.[Name]
+      ,CL.CategoryLevel+1
+      ,cl.rowNumber  + dbo.LeadingZeros((ROW_NUMBER() OVER (ORDER BY   c.[Name])),3) rowNumber
+  FROM [Miscellaneous].[dbo].[se_Categories] as C 
+  INNER JOIN CategoryList as CL ON C.CategoryParentId = CL.CategoryId 
+  WHERE [SiteId]=5 AND C.[CategoryParentId] > 0
+
+)
+ 
+
+select CategoryId, Name, CategoryLevel, CategoryParentId,rowNumber       
+from CategoryList 
+ORDER BY   rowNumber
+
+
+
+USE [Miscellaneous]
+GO
+/****** Object:  UserDefinedFunction [dbo].[LeadingZeros]    Script Date: 04/11/2014 16:22:03 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+/*
+
+SELECT dbo.LeadingZeros(50,4)
+*/
+
+ALTER FUNCTION [dbo].[LeadingZeros]
+(
+	@Arg int,
+	@Count int
+)
+RETURNS NVARCHAR(MAX)
+AS
+BEGIN
+
+	RETURN RIGHT(REPLICATE('0',@Count)+ CAST(@Arg as nvarchar(max)),@Count)
+
+END
+
+

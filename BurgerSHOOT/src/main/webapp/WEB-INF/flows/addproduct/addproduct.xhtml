@@ -1,0 +1,125 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:form="http://www.springframework.org/tags/form"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+
+
+		<h:form id="addProduct">
+			<table>
+				<tr>
+					<td><h:outputText value="ID   :"></h:outputText></td>
+					<td><h:outputText id="ID" value="#{newProduct.fldid}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Product Type   :"></h:outputText></td>
+					<td><h:selectOneListbox id="productTypeList"
+						value="#{newProduct.producttype}" converter="webflow.ProductTypeConvertor" size="1"	>
+						<f:selectItems value="#{productManager.productTypesItemList}">
+						</f:selectItems>
+					</h:selectOneListbox></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="Calcium   :"></h:outputText></td>
+					<td><h:inputText id="calcium" value="#{newProduct.calcium}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="calorie   :"></h:outputText></td>
+					<td><h:inputText id="calorie" value="#{newProduct.calorie}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="carbohydrate   :"></h:outputText></td>
+					<td><h:inputText id="carbohydrate"
+						value="#{newProduct.carbohydrate}" /></td>
+				</tr>
+
+
+				<tr>
+					<td><h:outputText value="cholesterol   :"></h:outputText></td>
+					<td><h:inputText id="cholesterol"
+						value="#{newProduct.cholesterol}" /></td>
+				</tr>
+
+
+
+				<tr>
+					<td><h:outputText value="fat   :"></h:outputText></td>
+					<td><h:inputText id="fat" value="#{newProduct.fat}" /></td>
+				</tr>
+
+
+				<tr>
+					<td><h:outputText value="fiber   :"></h:outputText></td>
+					<td><h:inputText id="fiber" value="#{newProduct.fiber}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="Description   :"></h:outputText></td>
+					<td><h:inputTextarea id="flddesc"
+						value="#{newProduct.flddesc}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="Name   :"></h:outputText></td>
+					<td><h:inputText id="fldname" value="#{newProduct.fldname}" /></td>
+				</tr>
+
+
+				<tr>
+					<td><h:outputText value="iron   :"></h:outputText></td>
+					<td><h:inputText id="iron" value="#{newProduct.iron}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="protein   :"></h:outputText></td>
+					<td><h:inputText id="protein" value="#{newProduct.protein}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="Salt   :"></h:outputText></td>
+					<td><h:inputText id="salt" value="#{newProduct.salt}" /></td>
+				</tr>
+
+
+				<tr>
+					<td><h:outputText value="Sodium   :"></h:outputText></td>
+					<td><h:inputText id="sodium" value="#{newProduct.sodium}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="sugar   :"></h:outputText></td>
+					<td><h:inputText id="sugar" value="#{newProduct.sugar}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="vitA   :"></h:outputText></td>
+					<td><h:inputText id="vitA" value="#{newProduct.vitA}" /></td>
+				</tr>
+
+				<tr>
+					<td><h:outputText value="vitC   :"></h:outputText></td>
+					<td><h:inputText id="vitC" value="#{newProduct.vitC}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputText value="sodium   :"></h:outputText></td>
+					<td><h:inputText id="sodium" value="#{newProduct.sodium}" /></td>
+				</tr>
+
+			</table>
+
+
+			<h:commandButton styleClass="detailsSubmit" action="OK" value="OK"></h:commandButton>
+			<h:commandButton styleClass="detailsSubmit" action="CANCEL"
+				value="Cancel"></h:commandButton>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>

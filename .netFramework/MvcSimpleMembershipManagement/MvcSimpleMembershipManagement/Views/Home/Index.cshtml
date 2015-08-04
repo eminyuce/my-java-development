@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+ <h3>@ViewBag.Message</h3>
+<ol class="round">
+  
+@{
+    
+    using (Html.BeginForm("ChangeConnectionString", "Home"))
+   { 
+       <span>Select Database: </span>  @Html.DropDownList("UserDatabases") 
+        <input type = "submit" class="myButton"  value = "Update"/>
+    
+   }  
+
+    } 
+</ol>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.emin"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="9"
+        android:targetSdkVersion="18" />
+ 
+	
+    <!-- GCM connects to Internet Services. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	
+	    <!-- Network State Permissions to detect Internet status -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	 
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.example.emin.activity.MainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        
+		<activity
+            android:name="com.example.emin.activity.MyAndroidAppActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+		
+		<activity
+            android:name="com.example.emin.activity.CustomizedListView"
+            android:label="@string/app_name" >
+        </activity>
+        
+				
+		<activity
+            android:name="com.example.emin.activity.WebViewActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+		<activity
+            android:name="com.example.emin.activity.AndroidListViewActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+		
+		<activity
+            android:name="com.example.emin.activity.AndroidJSONParsingActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+		
+			<activity
+            android:name="com.example.emin.activity.SingleMenuItemActivity"
+            android:label="@string/app_name" >
+        </activity>
+        
+        
+			        <!-- Inbox Activity -->
+        <activity android:name="com.example.emin.activity.AndroidTabAndListView" />	
+			        <!-- Inbox Activity -->
+        <activity android:name="com.example.emin.activity.InboxActivity" />
+
+        <!-- Outbox Activity -->
+        <activity android:name="com.example.emin.activity.OutboxActivity" />
+
+        <!-- Profile Activity -->
+        <activity android:name="com.example.emin.activity.ProfileActivity" />
+        
+        
+        <activity android:name="com.example.emin.fragment.TabsFragment" />
+        
+        
+         
+        <activity android:name="com.example.emin.activity.DownloadActivity" />
+        
+        
+        <activity android:name="com.example.emin.activity.ListViewSearchActivity" />
+        
+         <activity android:name="com.example.emin.activity.AddressBook" 
+         android:label="@string/app_name"></activity>
+         
+         <activity android:name="com.example.emin.activity.AddEditContact" 
+         android:label="@string/app_name"></activity>
+      <activity android:name="com.example.emin.activity.ViewContact" 
+         android:label="@string/app_name"></activity>
+        
+      
+        <activity android:name="com.example.emin.activity.SendEmailActivity" 
+         android:label="@string/app_name"></activity>
+         
+        
+        
+         <service android:name="com.example.emin.service.DownloadService" >
+        </service>
+    </application>
+
+</manifest>

@@ -1,0 +1,36 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:sf="http://www.springframework.org/tags/faces"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:a4j="http://richfaces.org/a4j"
+	template="/WEB-INF/layouts/standard.xhtml">
+
+	<ui:define name="content">
+		<h:form id="userDetailForm" style="width:100%;">
+			<rich:panel>
+				<f:facet name="header">
+					<h:outputText value="Membership Rules" />
+				</f:facet>
+				
+				<h:panelGroup layout="block" style="overflow:scroll;">
+					<h:outputText value="${userBackingBean.eula}" />
+				</h:panelGroup>
+				<a4j:commandButton ajaxSingle="true" immediate="true"
+					value="I agree!" action="OK" />
+				<a4j:commandButton ajaxSingle="true" immediate="true"
+					value="I do not agree!" action="Cancel" />
+
+			</rich:panel>
+		</h:form>
+	</ui:define>
+
+	<ui:define name="side-menu">
+		<a href="/spring/intro" class="morelink">Home</a>
+		<a href="showEULA.xhtml#" class="morelink">Kelam</a>
+	</ui:define>
+</ui:composition>
+

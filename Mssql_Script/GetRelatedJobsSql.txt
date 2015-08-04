@@ -1,0 +1,141 @@
+USE [Jobs]
+GO
+/****** Object:  StoredProcedure [dbo].[j_GetRelatedJobs ]    Script Date: 05/27/2014 09:32:16 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- j_GetRelatedJobs @IsAllowCompetitors=0
+ALTER PROCEDURE [dbo].[j_GetRelatedJobs ]
+	-- Add the parameters for the stored procedure here
+    @siteId int =5,
+	@take int =12,
+	@relatedJobId int=8341,
+	@IsAllowCompetitors bit = 1
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+--	1.	Get Jobs from Same Employer profile
+--2.	If IsAllowCompetitors=true AND Count(*)< take – Get [title] Full text search
+--3.	If Count(*)< take – Get Top Jobs
+	
+	declare @OriginalTopRecords int = @take
+	declare @count int=0
+	declare @employerId int
+	-- Get the employer id to get jobs from same profile
+	select @employerId=employerId from j_Jobs where JobId=@relatedJobId
+	
+	CREATE TABLE #JobListingIds(JobListingId int)
+	-- collect the other jobs from same profile
+	INSERT INTO #JobListingIds(JobListingId)
+	SELECT   TOP (@take) t.JobListingId JobListingId  
+				   FROM jp_JobListings as t 
+				  INNER JOIN	 j_Jobs as j ON t.JobId = j.JobId 
+				 INNER JOIN  js_JobListingSites jls ON t.JobListingId = jls.JobListingId
+				 INNER JOIN  p_JobTypes jt ON t.JobTypeId = jt.JobTypeId  
+			WHERE t.DatePublished<=GETDATE() AND t.DateExpired>=GETDATE()
+   AND t.IsPublished=1 AND t.IsStopped=0
+		AND (jls.SiteId = @siteId) and j.employerId=@employerId 
+		and  j.JobId  <> CASE WHEN @relatedJobId > 0 THEN  @relatedJobId ELSE -1 END
+		 
+	-- print @take
+    SELECT @count=COUNT(*) FROM #JobListingIds
+	IF @IsAllowCompetitors = 1  and @relatedJobId > 0  
+	BEGIN
+		SET @take=@OriginalTopRecords - @count
+		IF @take > 0
+		BEGIN
+			DECLARE @title nvarchar(100)
+			 
+			 SELECT @title=
+					 ISNULL(c.CategoryName,'') 
+					 +' '+
+					ISNULL(j.[Title],'')
+					FROM [dbo].[j_Jobs] as j INNER JOIN dbo.j_Category as c on  j.JobCategoryId = c.CategoryId
+					WHERE JobId=@relatedJobId
+					
+					
+					print @title
+
+					SELECT t.JobListingId as JobListingId--, ft.[RANK] as [RANK] 
+									INTO #tmp3 FROM  dbo.j_Jobs  s
+									INNER JOIN jp_JobListings as t  ON  t.JobId = s.JobId 
+									 INNER JOIN  js_JobListingSites jls ON t.JobListingId = jls.JobListingId
+									INNER JOIN 	FREETEXTTABLE ( dbo.j_Jobs, *, @title) ft ON s.JobId=ft.[Key]
+									WHERE jls.SiteId=@siteId AND  t.DatePublished<=GETDATE() AND t.DateExpired>=GETDATE()
+										AND t.IsPublished=1 AND t.IsStopped=0
+										AND s.employerId=@employerId and t.JobListingId NOT IN(SELECT JobListingId FROM #JobListingIds)
+												and  s.JobId  <> CASE WHEN @relatedJobId > 0 THEN  @relatedJobId ELSE -1 END
+									ORDER BY ft.[RANK] DESC
+									
+				 INSERT INTO #JobListingIds(JobListingId)
+				 select  top(@take) JobListingId from #tmp3
+		 
+		 
+		 
+		 				
+		END
+	
+	END
+	
+	 
+    SELECT @count=COUNT(*) FROM #JobListingIds
+	SET @take=@OriginalTopRecords - @count
+	
+	 
+	
+		
+				
+     -- SELECT  j.* FROM j_Jobs j INNER JOIN #JobListingIds t ON t.JobId=j.JobId  
+	
+	IF @take > 0
+	BEGIN
+	-- to do: fiil 	#JobListingIds by TOP Jobs
+		SET NOCOUNT ON;
+	
+	
+		SELECT    t.JobListingId JobListingId,jt.JobTypeId as JobTypeId INTO #tmp
+				   FROM jp_JobListings as t 
+				  INNER JOIN	 j_Jobs as j ON t.JobId = j.JobId 
+				 INNER JOIN  js_JobListingSites jls ON t.JobListingId = jls.JobListingId
+				 INNER JOIN  p_JobTypes jt ON t.JobTypeId = jt.JobTypeId  
+			WHERE t.DatePublished<=GETDATE() AND t.DateExpired>=GETDATE()
+   AND t.IsPublished=1 AND t.IsStopped=0
+		AND (jls.SiteId = @siteId) and  t.JobListingId NOT IN(SELECT JobListingId FROM #JobListingIds)
+		and  j.JobId  <> CASE WHEN @relatedJobId > 0 THEN  @relatedJobId ELSE -1 END
+				
+				 
+			 
+		 select    t.JobTypeId,j.JobListingId INTO #tmp2 from #tmp t	  INNER JOIN jp_JobListings j ON t.JobListingId=j.JobListingId 	 order by NEWID()
+		 
+		 --	 select  top(@take) JobId from #tmp2 order by JobTypeId desc
+		 	 
+		 	 
+		 INSERT INTO #JobListingIds(JobListingId)
+		 select  top(@take) JobListingId from #tmp2 order by JobTypeId desc
+		 
+	     
+		
+		
+	END
+	
+	
+	SELECT  j1.*,t.JobListingId FROM jp_JobListings j 
+	INNER JOIN #JobListingIds t ON t.JobListingId=j.JobListingId  
+	INNER JOIN j_Jobs as j1 ON j1.JobId=j.JobId
+	
+ 
+		  
+ 
+
+		 
+		 
+			
+			
+	
+
+
+END

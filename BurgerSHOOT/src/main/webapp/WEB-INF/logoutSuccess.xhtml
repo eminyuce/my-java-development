@@ -1,0 +1,19 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	    		xmlns:ui="http://java.sun.com/jsf/facelets"
+				template="layouts/standard.xhtml">
+
+<ui:define name="content">
+
+	<div class="section">
+		<h1 class="orangeBiggerCaption">Logout</h1>
+		<br />
+		<p class="blueCaption">You have successfully logged out.</p>
+		<br/>
+		<p>
+			<a href="logoutSuccess.xhtml#{request.contextPath}/spring/intro" class="register">Continue</a>
+		</p>	
+	</div>
+	
+</ui:define>
+</ui:composition>

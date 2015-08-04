@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="com.bday.notifier.JMailMachineForm">
+  <tabbedpane id="17241" binding="JMailnTabbedPane">
+    <constraints>
+      <xy x="20" y="20" width="533" height="550"/>
+    </constraints>
+    <properties>
+      <enabled value="true"/>
+      <preferredSize width="400" height="600"/>
+    </properties>
+    <border type="none"/>
+    <children>
+      <grid id="a0ed5" binding="Tab1" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints>
+          <tabbedpane title="Mails"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="27dc6" binding="JPanelMain" layout-manager="GridBagLayout">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <grid id="51fc6" binding="BottomPanel" layout-manager="BorderLayout" hgap="0" vgap="0">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="1.0" weighty="0.0"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="cb5f0" class="javax.swing.JButton" binding="buttonRetrieveEmails">
+                    <constraints border-constraint="South"/>
+                    <properties>
+                      <text value="Retrieve Emails"/>
+                    </properties>
+                  </component>
+                  <component id="4591d" class="javax.swing.JButton" binding="buttonFileChooser">
+                    <constraints border-constraint="North"/>
+                    <properties>
+                      <text value="Choose File"/>
+                    </properties>
+                  </component>
+                  <scrollpane id="20d42">
+                    <constraints border-constraint="Center"/>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="55b8a" class="javax.swing.JList" binding="listBoxEmails">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                </children>
+              </grid>
+              <component id="c4eb6" class="javax.swing.JButton" binding="buttonSendMails">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="1.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Send Mails"/>
+                </properties>
+              </component>
+              <scrollpane id="387df">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="1.0" weighty="1.0"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="ef5d0" class="javax.swing.JTextArea" binding="textAreaPageLinks">
+                    <constraints/>
+                    <properties/>
+                  </component>
+                </children>
+              </scrollpane>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="14d45" binding="Tab2" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <tabbedpane title="Settings"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children/>
+      </grid>
+    </children>
+  </tabbedpane>
+</form>

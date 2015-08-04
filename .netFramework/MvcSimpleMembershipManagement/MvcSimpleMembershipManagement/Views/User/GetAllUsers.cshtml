@@ -1,0 +1,45 @@
+﻿@model MvcSimpleMembershipManagement.Helpers.PaginatedList<MvcSimpleMembershipManagement.Models.UserProfile>
+
+@{
+    ViewBag.Title = "GetAllUsers";
+}
+
+<h2>Users</h2>
+@{
+    var users = Model; 
+}
+<p>
+    @Html.ActionLink("Create New User", "CreateOrEditUser")
+</p>
+
+@using (Html.BeginForm("GetAllUsers", "User"))
+{
+    <input type="text"  name="searchItem" value='@Request.QueryString["searchItem"]'/>
+    <input type="submit" value="search" class="myButton" name="search" />
+    <br />
+    <table>
+        <tr>
+            <th>
+                User Name
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in users)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "DeleteUser", new { userName = item.UserName, page=Model.PageIndex },
+                    new { onclick = String.Format("return confirm('Are you sure you want to delete {0}?');",item.UserName) }) |
+                    @Html.ActionLink("Assign Role", "AssignRole", "UserRole", new { id = item.UserId, page=Model.PageIndex  }, null) |
+                    @Html.ActionLink("Reset Password", "ResetPassword",  new { id = item.UserId, page=Model.PageIndex  }, null)
+                </td>
+            </tr>
+        }
+        @Html.Partial("PaginatedListFooter", users, new ViewDataDictionary(ViewData) { { "searchItem", Request.QueryString["searchItem"] } })
+    </table>
+}
+
