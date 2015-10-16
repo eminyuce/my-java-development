@@ -44,8 +44,9 @@ public final class Main {
      *
      * @param args - command line arguments
      */
-    public static void main(final String... args) {
-
+    public static void main(final String... args)
+    {
+        LOGGER.info("Testing...bye.");
         LOGGER.info("\n========================================================="
                   + "\n                                                         "
                   + "\n          Welcome to Spring Integration!                 "

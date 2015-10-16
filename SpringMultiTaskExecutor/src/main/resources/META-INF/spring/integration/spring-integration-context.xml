@@ -6,7 +6,7 @@
                         http://www.springframework.org/schema/beans/spring-beans.xsd
                         http://www.springframework.org/schema/integration
                         http://www.springframework.org/schema/integration/spring-integration-2.1.xsd">
-	
+
 
 		<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		  <property name="corePoolSize" value="50" />

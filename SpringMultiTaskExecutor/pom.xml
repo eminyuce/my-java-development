@@ -10,9 +10,6 @@
     <name>SpringMultiTaskExecutor</name>
     <url>http://www.springsource.org/spring-integration</url>
 
-    <prerequisites>
-        <maven>2.2.0</maven>
-    </prerequisites>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,7 +24,18 @@
             <name>Spring Framework Maven Release Repository</name>
             <url>http://maven.springframework.org/release</url>
         </repository>
+
+        <repository>
+            <id>gDao-mvn-repo</id>
+            <url>https://github.com/mertmr/gDao/tree/mvn-repo/</url>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
     </repositories>
+
+
 
     <build>
         <plugins>
@@ -69,6 +77,12 @@
     </build>
 
     <dependencies>
+
+        <dependency>
+            <groupId>gDao</groupId>
+            <artifactId>gDao</artifactId>
+            <version>0.1.2</version>
+        </dependency>
 
         <!-- Testing -->
 
