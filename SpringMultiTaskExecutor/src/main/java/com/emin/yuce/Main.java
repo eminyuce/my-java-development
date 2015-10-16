@@ -63,7 +63,7 @@ public final class Main {
         TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
         exampleService.printMessages();
         LOGGER.info("Exiting application...bye.");
-
+        LOGGER.info("Exiting application...bye.................................................................");
         System.exit(0);
 
     }
