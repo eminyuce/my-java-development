@@ -29,7 +29,7 @@ import com.emin.yuce.service.TaskExecutorExampleService;
 /**
  * Starts the Spring Context and will initialize the Spring Integration routes.
  *
- * @author Emin Yüce
+
  * @version 1.0
  *
  */
