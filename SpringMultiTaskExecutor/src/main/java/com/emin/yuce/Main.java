@@ -58,13 +58,13 @@ public final class Main {
                   + "\n    http://www.springsource.org/spring-integration       "
                   + "\n                                                         "
                   + "\n=========================================================" );
-//
-//        final AbstractApplicationContext context =
-//                new ClassPathXmlApplicationContext("classpath:META-INF/spring/integration/*-context.xml");
-//
-//        LOGGER.info("Starting application");
-//        TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
-//        exampleService.printMessages();
+
+        final AbstractApplicationContext context =
+                new ClassPathXmlApplicationContext("classpath:META-INF/spring/integration/*-context.xml");
+
+        LOGGER.info("Starting application");
+        TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
+        exampleService.printMessages();
         LOGGER.info("Exiting application...bye.");
         LOGGER.info("Exiting application...bye.................................................................");
 

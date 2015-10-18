@@ -11,9 +11,9 @@
        http://www.springframework.org/schema/tx
        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
 
-    <!-- -->
-    <!--<import resource="applicationContextGDao.xml"/>-->
-    <!-- -->
+
+    <import resource="applicationContextGDao.xml"/>
+
 
 		<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
 		  <property name="corePoolSize" value="50" />

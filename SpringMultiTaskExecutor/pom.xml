@@ -196,6 +196,12 @@
 
 
 
+        <dependency>
+            <groupId>com.microsoft.mssql</groupId>
+            <artifactId>mssql</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
 
 
 
