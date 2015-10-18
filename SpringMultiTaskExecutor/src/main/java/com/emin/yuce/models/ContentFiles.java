@@ -6,27 +6,20 @@
 package com.emin.yuce.models;
 
 import java.io.Serializable;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *
  * @author EMIN
  */
 @Entity
-@Table(name = "ContentFiles", catalog = "TestEY_2", schema = "dbo")
-@NamedQueries({
-    @NamedQuery(name = "ContentFiles.findAll", query = "SELECT c FROM ContentFiles c")})
+@Table(name = "ContentFiles")
 public class ContentFiles implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
     @Column(name = "Id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     @Column(name = "ContentId")
     private Integer contentId;

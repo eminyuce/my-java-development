@@ -7,28 +7,19 @@ package com.emin.yuce.models;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+import javax.persistence.*;
 
 /**
  *
  * @author EMIN
  */
 @Entity
-@Table(name = "Brands", catalog = "TestEY_2", schema = "dbo")
-@NamedQueries({
-    @NamedQuery(name = "Brands.findAll", query = "SELECT b FROM Brands b")})
+@Table(name = "Brands")
 public class Brands implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "Id", nullable = false)
     private Integer id;
     @Basic(optional = false)
@@ -44,10 +35,8 @@ public class Brands implements Serializable {
     @Column(name = "Ordering")
     private Integer ordering;
     @Column(name = "CreatedDate")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
     @Column(name = "UpdatedDate")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
 
     public Brands() {
@@ -151,5 +140,5 @@ public class Brands implements Serializable {
     public String toString() {
         return "javaapplication1.Brands[ id=" + id + " ]";
     }
-    
+
 }

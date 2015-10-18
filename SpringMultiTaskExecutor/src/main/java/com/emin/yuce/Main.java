@@ -17,6 +17,7 @@ package com.emin.yuce;
 
 import java.util.Scanner;
 
+import com.emin.yuce.service.ShopStyleApiService;
 import com.shopstyle.api.*;
 import com.shopstyle.bo.*;
 
@@ -51,47 +52,26 @@ public final class Main {
     {
         LOGGER.info("Testing...bye.");
         LOGGER.info("\n========================================================="
-                  + "\n                                                         "
-                  + "\n          Welcome to Spring Integration!                 "
-                  + "\n                                                         "
-                  + "\n    For more information please visit:                   "
-                  + "\n    http://www.springsource.org/spring-integration       "
-                  + "\n                                                         "
+                  + "\n    "
                   + "\n=========================================================" );
 
         final AbstractApplicationContext context =
                 new ClassPathXmlApplicationContext("classpath:META-INF/spring/integration/*-context.xml");
 
-        LOGGER.info("Starting application");
-        TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
-        exampleService.printMessages();
-        LOGGER.info("Exiting application...bye.");
-        LOGGER.info("Exiting application...bye.................................................................");
+//        LOGGER.info("Starting application");
+//        TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
+//        exampleService.printMessages();
+//        LOGGER.info("Exiting application...bye.");
+//        LOGGER.info("Exiting application...bye.................................................................");
 
-
-
-        ShopStyle api = new ShopStyle("uid121-30959989-77");
-        ProductQuery query = new ProductQuery().withFreeText("red dresses");
-        ProductSearchResponse response = null;
-        try {
-            response = api.getProducts(query);
-
-            LOGGER.info("Total Prodcut Count="+response.getProducts().length);
-            ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class);
-            CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
-            RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
-
-
-        } catch (ShopStyle.APIException e) {
-            e.printStackTrace();
-        }
-        for (Product product : response.getProducts()) {
-            System.out.println(product.getName());
-        }
+        ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
+        shopStyleApiService.writeApiToDatabase();
 
 
 
         System.exit(0);
 
     }
+
+
 }

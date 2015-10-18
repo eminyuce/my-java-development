@@ -15,15 +15,15 @@
     <import resource="applicationContextGDao.xml"/>
 
 
-		<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-		  <property name="corePoolSize" value="50" />
-		  <property name="maxPoolSize" value="60" />
-		  <property name="queueCapacity" value="50" />
-		</bean>
+		<!--<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">-->
+		  <!--<property name="corePoolSize" value="50" />-->
+		  <!--<property name="maxPoolSize" value="60" />-->
+		  <!--<property name="queueCapacity" value="50" />-->
+		<!--</bean>-->
 
-		<bean id="taskExecutorExample" class="com.emin.yuce.service.TaskExecutorExampleService">
-		  <constructor-arg ref="taskExecutor" />
-		</bean>
+		<!--<bean id="taskExecutorExample" class="com.emin.yuce.service.TaskExecutorExampleService">-->
+		  <!--<constructor-arg ref="taskExecutor" />-->
+		<!--</bean>-->
 
 
 

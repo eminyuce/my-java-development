@@ -1,3 +1,5 @@
+
+
 package com.emin.yuce.service;
 
 import com.emin.yuce.genericDao.GDao;
@@ -11,10 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class ProductService  extends BaseService {
+public class CategoryService extends BaseService {
 
-    @SimpleDao(Products.class)
-    protected GDao<Products> productDao;
+    @SimpleDao(Categories.class)
+    protected GDao<Categories> categoryDao;
 
 
 }
