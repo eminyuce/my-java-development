@@ -7,9 +7,12 @@ import com.emin.yuce.models.Brands;
 import com.emin.yuce.models.Products;
 import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
+import com.shopstyle.bo.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,11 +43,17 @@ public class BrandService extends BaseService {
         return brandDao.findWithFinder(finder);
     }
 
-    public void saveOrUpdate(Brands brands)   {
-        try {
-            brandDao.saveOrUpdate(brands);
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
-        }
+
+    public void SaveBrand(int storeId,String name,String description) {
+        Brands brands = new Brands();
+
+        brands.setName(name);
+        brands.setCreatedDate(Date.from(Instant.now()));
+        brands.setDescription(description);
+        brands.setOrdering(1);
+        brands.setUpdatedDate(Date.from(Instant.now()));
+        brands.setStoreId(storeId);
+        brands.setState(true);
+        this.saveOrUpdate(this.brandDao,brands);
     }
 }

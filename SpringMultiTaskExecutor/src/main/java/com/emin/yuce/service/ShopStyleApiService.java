@@ -1,6 +1,7 @@
 package com.emin.yuce.service;
 
 import com.emin.yuce.models.Brands;
+import com.emin.yuce.models.ProductCategories;
 import com.shopstyle.api.*;
 import com.shopstyle.bo.Category;
 import com.shopstyle.bo.Product;
@@ -25,14 +26,30 @@ public class ShopStyleApiService {
     public BrandService brandService;
 
 
-    public  void writeApiToDatabase() {
+    @Autowired
+    public ProductCategoryService productCategoryService;
+
+
+    public  void writeApiToDatabase(int storeId) {
         ShopStyle api = new ShopStyle("uid121-30959989-77");
-        ProductQuery query = new ProductQuery().withFreeText("red dresses");
+        ProductQuery pp = new ProductQuery();
+        ProductQuery query = pp.withFreeText("red dresses");
+
+
         ProductSearchResponse response = null;
         try {
+            Category oo=null;
+            CategoryListResponse categoryListResponse =  api.getCategories(oo,0);
+            Category [] cats= categoryListResponse.getCategories();
+            LOGGER.info("Total Categories "+cats.length);
+            for (Category c : cats){
+
+                ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getParentId());
+                LOGGER.info(productCategories.getId() + " " + c.getName());
+            }
             response = api.getProducts(query);
 
-            LOGGER.info("Total Prodcut Count="+response.getProducts().length);
+          //  LOGGER.info("Total Prodcut Count="+response.getProducts().length);
             ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class);
             CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
             RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
@@ -41,20 +58,13 @@ public class ShopStyleApiService {
         } catch (ShopStyle.APIException e) {
             e.printStackTrace();
         }
-        for (Product product : response.getProducts()) {
-            System.out.println(product.getName());
-            LOGGER.info(product.getName());
-
-            Brands brands = new Brands();
-
-            brands.setName(product.getName());
-            brands.setCreatedDate(Date.from(Instant.now()));
-            brands.setDescription("test");
-            brands.setOrdering(1);
-            brands.setUpdatedDate(Date.from(Instant.now()));
-            brands.setStoreId(1);
-            brands.setState(true);
-            brandService.saveOrUpdate(brands);
-        }
+//        for (Product product : response.getProducts()) {
+//            System.out.println(product.getName());
+//            LOGGER.info(product.getName());
+//
+//            brandService.SaveBrand(storeId,product.getName(), product.getDescription());
+//        }
     }
+
+
 }

@@ -23,4 +23,12 @@ public  class BaseService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(BaseService.class);
 
 
+
+    protected  <T> void saveOrUpdate(GDao<T> dao, T brands)   {
+        try {
+            dao.saveOrUpdate(brands);
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(),e);
+        }
+    }
 }
