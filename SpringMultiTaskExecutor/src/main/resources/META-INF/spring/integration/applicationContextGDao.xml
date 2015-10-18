@@ -30,7 +30,7 @@
     <bean id="sessionFactory" class=
             "org.springframework.orm.hibernate4.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
-        <property name="packagesToScan" value="com.eminyuce.mvc.models"/>
+        <property name="packagesToScan" value="com.emin.yuce.models"/>
 
         <property name="hibernateProperties">
             <props>
