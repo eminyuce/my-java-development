@@ -44,7 +44,7 @@ public class BrandService extends BaseService {
     }
 
 
-    public void SaveBrand(int storeId,String name,String description) {
+    public Brands SaveBrand(int storeId,String name,String description) {
         Brands brands = new Brands();
 
         brands.setName(name);
@@ -54,6 +54,8 @@ public class BrandService extends BaseService {
         brands.setUpdatedDate(Date.from(Instant.now()));
         brands.setStoreId(storeId);
         brands.setState(true);
-        this.saveOrUpdate(this.brandDao,brands);
+        this.saveOrUpdate(this.brandDao, brands);
+
+        return brands;
     }
 }

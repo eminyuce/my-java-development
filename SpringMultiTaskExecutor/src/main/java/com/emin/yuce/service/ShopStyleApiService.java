@@ -3,6 +3,7 @@ package com.emin.yuce.service;
 import com.emin.yuce.models.Brands;
 import com.emin.yuce.models.ProductCategories;
 import com.shopstyle.api.*;
+import com.shopstyle.bo.Brand;
 import com.shopstyle.bo.Category;
 import com.shopstyle.bo.Product;
 import com.shopstyle.bo.Retailer;
@@ -25,45 +26,59 @@ public class ShopStyleApiService {
     @Autowired
     public BrandService brandService;
 
+    @Autowired
+    public ProductService productService;
+
 
     @Autowired
     public ProductCategoryService productCategoryService;
 
 
-    public  void writeApiToDatabase(int storeId) {
+    public void writeApiToDatabase() {
+
+        int storeId=2;
         ShopStyle api = new ShopStyle("uid121-30959989-77");
         ProductQuery pp = new ProductQuery();
-        ProductQuery query = pp.withFreeText("red dresses");
+
 
 
         ProductSearchResponse response = null;
         try {
-            Category oo=null;
-            CategoryListResponse categoryListResponse =  api.getCategories(oo,0);
-            Category [] cats= categoryListResponse.getCategories();
-            LOGGER.info("Total Categories "+cats.length);
-            for (Category c : cats){
+
+            BrandListResponse brandListResponse  =   api.getBrands();
+            for (Brand b: brandListResponse.getBrands()) {
+                Brands brandItem = brandService.SaveBrand(storeId, b.getName(), b.getUrl());
+            }
+            Category oo = null;
+            CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
+            Category[] cats = categoryListResponse.getCategories();
+            LOGGER.info("Total Categories " + cats.length);
+            for (Category c : cats) {
 
                 ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getParentId());
                 LOGGER.info(productCategories.getId() + " " + c.getName());
-            }
-            response = api.getProducts(query);
+                ProductQuery query = pp.withCategory(c);
+                response = api.getProducts(query);
+                for (Product product : response.getProducts()) {
+                    System.out.println(product.getName());
+                    LOGGER.info(product.getName());
+                    LOGGER.info("Total product Count=" + response.getProducts().length);
+                    ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class,Brand.class);
+                    CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
+                    RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
+                    BrandHistogramEntry [] brandHistogram = histograms.getBrandHistogram();
 
-          //  LOGGER.info("Total Prodcut Count="+response.getProducts().length);
-            ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class);
-            CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
-            RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
+
+                }
+
+
+            }
 
 
         } catch (ShopStyle.APIException e) {
             e.printStackTrace();
         }
-//        for (Product product : response.getProducts()) {
-//            System.out.println(product.getName());
-//            LOGGER.info(product.getName());
-//
-//            brandService.SaveBrand(storeId,product.getName(), product.getDescription());
-//        }
+
     }
 
 
