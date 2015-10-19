@@ -45,7 +45,7 @@ public class ProductService  extends BaseService {
         item.setProductCode(product.getId()+"");
         item.setImageState(true);
         item.setTotalRating(1);
-        item.setUnitsInStock(99);
+        item.setUnitsInStock(10);
         item.setVideoUrl(product.getClickUrl());
 
 
