@@ -11,12 +11,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.beans.Transient;
 
 
 /**
  * Created by EMIN on 10/18/2015.
  */
 @Service
+@Transactional
 public class ShopStyleApiService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ShopStyleApiService.class);
@@ -31,7 +35,7 @@ public class ShopStyleApiService {
     @Autowired
     public ProductCategoryService productCategoryService;
 
-
+    @Transactional
     public void writeApiToDatabase() {
 
         int storeId=2;
@@ -45,7 +49,7 @@ public class ShopStyleApiService {
 
             BrandListResponse brandListResponse  =   api.getBrands();
             for (Brand b: brandListResponse.getBrands()) {
-                Brands brandItem = brandService.SaveBrand(storeId, b);
+                Brands brandItem = brandService.SaveBrand(storeId, b.getId()+"",b.getName(),b.getUrl());
             }
             Category oo = null;
             CategoryListResponse categoryListResponse = api.getCategories(oo, 0);

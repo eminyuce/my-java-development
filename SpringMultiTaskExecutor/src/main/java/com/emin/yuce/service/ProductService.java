@@ -23,7 +23,7 @@ public class ProductService  extends BaseService {
     @Autowired
     public BrandService brandService;
 
-
+    @Transactional
     public Products saveProduct(int storeId,
                                 Product product,
                                 Integer categoryId,

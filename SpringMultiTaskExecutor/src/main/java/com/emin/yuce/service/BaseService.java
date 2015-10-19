@@ -23,7 +23,7 @@ public  class BaseService {
     protected static final Logger LOGGER = LoggerFactory.getLogger(BaseService.class);
 
 
-
+    @Transactional
     protected  <T> void saveOrUpdate(GDao<T> dao, T brands)   {
         try {
             dao.saveOrUpdate(brands);

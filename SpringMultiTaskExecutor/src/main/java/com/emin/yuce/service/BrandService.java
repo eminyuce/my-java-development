@@ -8,7 +8,6 @@ import com.emin.yuce.models.Products;
 import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
 import com.shopstyle.bo.Brand;
-import com.shopstyle.bo.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,16 +20,16 @@ public class BrandService extends BaseService {
 
 
     @SimpleDao(Brands.class)
-    protected GDao<Brands> brandDao;
+    public GDao<Brands> brandDao;
 
-
+    @Transactional
     public Integer count(){
 
         return brandDao.count();
     }
 
 
-
+    @Transactional
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
 //        List<Brands> items = brandDao.findAll();
 //
@@ -50,7 +49,7 @@ public class BrandService extends BaseService {
     }
 
 
-
+    @Transactional
     public List<Brands> findBrandsByName(int storeId,String name, String description) {
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("storeId", storeId);
@@ -63,24 +62,24 @@ public class BrandService extends BaseService {
         return brandDao.findWithFinder(finder);
     }
 
-
-    public Brands SaveBrand(int storeId,Brand brand) {
+    @Transactional
+    public Brands SaveBrand(int storeId,String brandId,String name, String url) {
         Brands brands = new Brands();
         List<Brands> brandList = null;
         try {
-            brandList = findBrandsByBrandCode(storeId, brand.getId()+"");
+            brandList = findBrandsByBrandCode(storeId, brandId);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if(brandList != null && brandList.size()  == 0){
-            brands.setName(brand.getName());
+            brands.setName(name);
             brands.setCreatedDate(new Date());
-            brands.setDescription(brand.getUrl());
+            brands.setDescription(url);
             brands.setOrdering(1);
             brands.setUpdatedDate(new Date());
             brands.setStoreId(storeId);
             brands.setState(true);
-            brands.setBrandCode(brand.getId() + "");
+            brands.setBrandCode(brandId);
             this.saveOrUpdate(this.brandDao, brands);
         }else{
             brands = brandList.get(0);

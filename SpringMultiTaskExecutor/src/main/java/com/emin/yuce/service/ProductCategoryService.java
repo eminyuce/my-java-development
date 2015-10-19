@@ -17,6 +17,7 @@ public class ProductCategoryService extends BaseService {
     @SimpleDao(ProductCategories.class)
     protected GDao<ProductCategories> productCategoryDao;
 
+    @Transactional
     public ProductCategories saveProductCategory(int storeId, String name, String parentId) {
         ProductCategories item = new ProductCategories();
 
