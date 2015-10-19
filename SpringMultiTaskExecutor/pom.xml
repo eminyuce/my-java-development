@@ -13,10 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <slf4j.version>1.6.4</slf4j.version>
-        <junit.version>4.10</junit.version>
-        <hibernate.version>4.2.0.Final</hibernate.version>
-        <spring.version>3.2.4.RELEASE</spring.version>
+        <slf4j.version>1.7.12</slf4j.version>
+        <junit.version>4.12</junit.version>
+        <hibernate.version>5.0.2.Final</hibernate.version>
+        <spring.version>4.2.2.RELEASE</spring.version>
     </properties>
 
     <repositories>

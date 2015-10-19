@@ -68,6 +68,7 @@
     <bean id="transactionManager"
           class="org.springframework.orm.hibernate4.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory"/>
+        <property name="dataSource" ref="dataSource" />
     </bean>
 
     <tx:annotation-driven transaction-manager="transactionManager"/>

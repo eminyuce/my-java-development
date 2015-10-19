@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 
 
@@ -34,10 +33,10 @@ public class ProductService  extends BaseService {
 
         item.setProductCategoryId(categoryId);
         item.setName(product.getName());
-        item.setCreatedDate(Date.from(Instant.now()));
+        item.setCreatedDate(new Date());
         item.setDescription(product.getDescription());
         item.setOrdering(1);
-        item.setUpdatedDate(Date.from(Instant.now()));
+        item.setUpdatedDate(new Date());
         item.setStoreId(storeId);
         item.setState(true);
         this.saveOrUpdate(this.productDao, item);

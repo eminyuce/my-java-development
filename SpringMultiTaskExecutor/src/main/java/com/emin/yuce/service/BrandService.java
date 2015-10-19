@@ -12,11 +12,8 @@ import com.shopstyle.bo.Product;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -35,15 +32,21 @@ public class BrandService extends BaseService {
 
 
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
-        List<Brands> items = brandDao.findAll();
+//        List<Brands> items = brandDao.findAll();
+//
+//
+//        Stream<Brands> personsOver18 = items.stream().filter(p ->
+//                p.getBrandCode() == brandCode &&
+//                        p.getStoreId()  == storeId);
+//
+//
+//        return  personsOver18.collect(Collectors.toList());
 
+        Finder finder = FinderFactory.getInstance();
+        finder.addFilterEqual("storeId", storeId);
+        finder.addFilterEqual("brandCode", brandCode);
 
-        Stream<Brands> personsOver18 = items.stream().filter(p ->
-                p.getBrandCode() == brandCode &&
-                        p.getStoreId()  == storeId);
-
-
-        return  personsOver18.collect(Collectors.toList());
+        return brandDao.findWithFinder(finder);
     }
 
 
@@ -71,10 +74,10 @@ public class BrandService extends BaseService {
         }
         if(brandList != null && brandList.size()  == 0){
             brands.setName(brand.getName());
-            brands.setCreatedDate(Date.from(Instant.now()));
+            brands.setCreatedDate(new Date());
             brands.setDescription(brand.getUrl());
             brands.setOrdering(1);
-            brands.setUpdatedDate(Date.from(Instant.now()));
+            brands.setUpdatedDate(new Date());
             brands.setStoreId(storeId);
             brands.setState(true);
             brands.setBrandCode(brand.getId() + "");

@@ -8,7 +8,6 @@ import com.emin.yuce.models.ProductCategories;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
 import java.util.Date;
 
 @Service
@@ -22,10 +21,10 @@ public class ProductCategoryService extends BaseService {
         ProductCategories item = new ProductCategories();
 
         item.setName(name);
-        item.setCreatedDate(Date.from(Instant.now()));
+        item.setCreatedDate(new Date());
         item.setDescription(parentId);
         item.setOrdering(1);
-        item.setUpdatedDate(Date.from(Instant.now()));
+        item.setUpdatedDate(new Date());
         item.setStoreId(storeId);
         item.setState(true);
         this.saveOrUpdate(this.productCategoryDao,item);
