@@ -7,13 +7,17 @@ import com.emin.yuce.models.Brands;
 import com.emin.yuce.models.Products;
 import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
+import com.emin.yuce.util.SimpleCacheManager;
+import com.jcabi.aspects.Cacheable;
 import com.shopstyle.bo.Brand;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Transactional
@@ -29,19 +33,32 @@ public class BrandService extends BaseService {
         return brandDao.count();
     }
 
+    @Transactional
+
+    public  List<Brands> findAll(){
+        SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
+        String key="findAllBrands";
+        List<Brands> items = (List<Brands>) simpleCacheManager.get(key);
+        if(items == null){
+            items = brandDao.findAll();
+            simpleCacheManager.put(key,items);
+        }
+        return items;
+    }
 
     @Transactional
+
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
-       /// List<Brands> items = brandDao.findAll();
+        List<Brands> items = this.findAll();
         List<Brands> results = new ArrayList<Brands>();
+
+        for (Brands p : items){
+            if(p.getBrandCode().equals(brandCode) &&   p.getStoreId()  == storeId){
+                results.add(p);
+            }
+        }
+
         return results;
-//        for (Brands p : items){
-//            if(p.getBrandCode() == brandCode &&   p.getStoreId()  == storeId){
-//                results.add(p);
-//            }
-//        }
-
-
 
 //        Stream<Brands> personsOver18 = items.stream().filter(p ->
 //                p.getBrandCode() == brandCode &&
