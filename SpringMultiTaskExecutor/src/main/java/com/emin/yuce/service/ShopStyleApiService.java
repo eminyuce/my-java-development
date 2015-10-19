@@ -74,10 +74,10 @@ public class ShopStyleApiService {
                     RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
                     BrandHistogramEntry [] brandHistogram = histograms.getBrandHistogram();
 
-
+                    break;
                 }
 
-
+                break;
             }
 
 
