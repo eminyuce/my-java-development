@@ -51,34 +51,34 @@ public class ShopStyleApiService {
             for (Brand b: brandListResponse.getBrands()) {
                 Brands brandItem = brandService.SaveBrand(storeId, b.getId()+"",b.getName(),b.getUrl());
             }
-//            Category oo = null;
-//            CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
-//            Category[] cats = categoryListResponse.getCategories();
-//            LOGGER.info("Total Categories " + cats.length);
-//            for (Category c : cats) {
-//
-//                ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getParentId());
-//                LOGGER.info(productCategories.getId() + " " + c.getName());
-//                ProductQuery query = pp.withCategory(c);
-//                response = api.getProducts(query);
-//                for (Product product : response.getProducts()) {
-//                    System.out.println(product.getName());
-//                    productService.saveProduct(storeId,product,
-//                            productCategories.getId(),
-//                            product.getBrand());
-//
-//                    LOGGER.info(product.getName());
-//                    LOGGER.info("Total product Count=" + response.getProducts().length);
-//                    ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class,Brand.class);
-//                    CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
-//                    RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
-//                    BrandHistogramEntry [] brandHistogram = histograms.getBrandHistogram();
-//
-//
-//                }
-//
-//
-//            }
+            Category oo = null;
+            CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
+            Category[] cats = categoryListResponse.getCategories();
+            LOGGER.info("Total Categories " + cats.length);
+            for (Category c : cats) {
+
+                ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getId(), c.getParentId());
+                LOGGER.info(productCategories.getId() + " " + c.getName());
+                ProductQuery query = pp.withCategory(c);
+                response = api.getProducts(query);
+                for (Product product : response.getProducts()) {
+                    System.out.println(product.getName());
+                    productService.saveProduct(storeId,product,
+                            productCategories.getId(),
+                            product.getBrand());
+
+                    LOGGER.info(product.getName());
+                    LOGGER.info("Total product Count=" + response.getProducts().length);
+                    ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class,Brand.class);
+                    CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
+                    RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
+                    BrandHistogramEntry [] brandHistogram = histograms.getBrandHistogram();
+
+
+                }
+
+
+            }
 
 
         } catch (ShopStyle.APIException e) {

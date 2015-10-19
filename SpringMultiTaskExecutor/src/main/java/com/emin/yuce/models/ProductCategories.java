@@ -43,6 +43,11 @@ public class ProductCategories implements Serializable {
     @Column(name = "UpdatedDate")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedDate;
+    @Column(name = "ApiCategoryId", length = 255)
+    private String ApiCategoryId;
+    @Column(name = "ApiCategoryParentId", length = 255)
+    private String ApiCategoryParentId;
+
 
     public ProductCategories() {
     }
@@ -55,7 +60,21 @@ public class ProductCategories implements Serializable {
         this.id = id;
         this.createdDate = createdDate;
     }
+    public String getApiCategoryId() {
+        return ApiCategoryId;
+    }
 
+    public String getApiCategoryParentId() {
+        return ApiCategoryParentId;
+    }
+
+    public void setApiCategoryParentId(String apiCategoryParentId) {
+        ApiCategoryParentId = apiCategoryParentId;
+    }
+
+    public void setApiCategoryId(String apiCategoryId) {
+        ApiCategoryId = apiCategoryId;
+    }
     public Integer getId() {
         return id;
     }

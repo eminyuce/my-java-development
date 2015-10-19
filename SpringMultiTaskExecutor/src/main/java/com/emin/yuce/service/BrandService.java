@@ -34,13 +34,14 @@ public class BrandService extends BaseService {
     }
 
     @Transactional
-
-    public  List<Brands> findAll(){
+    public  List<Brands> findAllByStoreId(int storeId){
         SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
-        String key="findAllBrands";
+        String key="findAllBrands-"+storeId;
         List<Brands> items = (List<Brands>) simpleCacheManager.get(key);
         if(items == null){
-            items = brandDao.findAll();
+            Finder finder = FinderFactory.getInstance();
+            finder.addFilterEqual("storeId", storeId);
+            items = brandDao.findWithFinder(finder);
             simpleCacheManager.put(key,items);
         }
         return items;
@@ -49,11 +50,11 @@ public class BrandService extends BaseService {
     @Transactional
 
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
-        List<Brands> items = this.findAll();
+        List<Brands> items = this.findAllByStoreId(storeId);
         List<Brands> results = new ArrayList<Brands>();
 
         for (Brands p : items){
-            if(p.getBrandCode().equals(brandCode) &&   p.getStoreId()  == storeId){
+            if(p.getBrandCode().equals(brandCode)){
                 results.add(p);
             }
         }
