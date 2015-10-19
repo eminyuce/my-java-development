@@ -47,7 +47,7 @@ public class ShopStyleApiService {
 
             BrandListResponse brandListResponse  =   api.getBrands();
             for (Brand b: brandListResponse.getBrands()) {
-                Brands brandItem = brandService.SaveBrand(storeId, b.getName(), b.getUrl());
+                Brands brandItem = brandService.SaveBrand(storeId, b);
             }
             Category oo = null;
             CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
@@ -61,6 +61,10 @@ public class ShopStyleApiService {
                 response = api.getProducts(query);
                 for (Product product : response.getProducts()) {
                     System.out.println(product.getName());
+                    productService.saveProduct(storeId,product,
+                            productCategories.getId(),
+                            product.getBrand());
+
                     LOGGER.info(product.getName());
                     LOGGER.info("Total product Count=" + response.getProducts().length);
                     ProductHistogramResponse histograms = api.getProductsHistogram(query, Category.class, Retailer.class,Brand.class);

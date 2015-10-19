@@ -28,6 +28,12 @@ public class Brands implements Serializable {
     @Basic(optional = false)
     @Column(name = "Name", nullable = false, length = 500)
     private String name;
+
+
+
+    @Basic(optional = false)
+    @Column(name = "BrandCode", nullable = false, length = 500)
+    private String brandCode;
     @Column(name = "Description", length = 2147483647)
     private String description;
     @Column(name = "State")
@@ -114,6 +120,14 @@ public class Brands implements Serializable {
 
     public void setUpdatedDate(Date updatedDate) {
         this.updatedDate = updatedDate;
+    }
+
+    public String getBrandCode() {
+        return brandCode;
+    }
+
+    public void setBrandCode(String brandCode) {
+        this.brandCode = brandCode;
     }
 
     @Override
