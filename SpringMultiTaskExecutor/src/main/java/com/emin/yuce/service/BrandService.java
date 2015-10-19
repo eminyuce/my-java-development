@@ -11,6 +11,7 @@ import com.shopstyle.bo.Brand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -31,9 +32,17 @@ public class BrandService extends BaseService {
 
     @Transactional
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
-//        List<Brands> items = brandDao.findAll();
-//
-//
+       /// List<Brands> items = brandDao.findAll();
+        List<Brands> results = new ArrayList<Brands>();
+        return results;
+//        for (Brands p : items){
+//            if(p.getBrandCode() == brandCode &&   p.getStoreId()  == storeId){
+//                results.add(p);
+//            }
+//        }
+
+
+
 //        Stream<Brands> personsOver18 = items.stream().filter(p ->
 //                p.getBrandCode() == brandCode &&
 //                        p.getStoreId()  == storeId);
@@ -41,11 +50,11 @@ public class BrandService extends BaseService {
 //
 //        return  personsOver18.collect(Collectors.toList());
 
-        Finder finder = FinderFactory.getInstance();
-        finder.addFilterEqual("storeId", storeId);
-        finder.addFilterEqual("brandCode", brandCode);
-
-        return brandDao.findWithFinder(finder);
+//        Finder finder = FinderFactory.getInstance();
+//        finder.addFilterEqual("storeId", storeId);
+//        finder.addFilterEqual("brandCode", brandCode);
+//
+//        return brandDao.findWithFinder(finder);
     }
 
 
