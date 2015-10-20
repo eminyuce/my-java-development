@@ -64,8 +64,8 @@ public final class Main {
 //        LOGGER.info("Exiting application...bye.");
 //        LOGGER.info("Exiting application...bye.................................................................");
 
-        ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
-        shopStyleApiService.writeApiToDatabase();
+      //  ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
+       // shopStyleApiService.writeApiToDatabase();
 
 
 

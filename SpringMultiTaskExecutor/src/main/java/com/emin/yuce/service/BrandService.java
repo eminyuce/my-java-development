@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Transactional
 public class BrandService extends BaseService {
 
+    private SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
 
     @SimpleDao(Brands.class)
     public GDao<Brands> brandDao;
@@ -32,10 +33,13 @@ public class BrandService extends BaseService {
 
         return brandDao.count();
     }
-
+    public void removeCache(int storeId){
+        String key="findAllBrands-"+storeId;
+        simpleCacheManager.clear(key);
+    }
     @Transactional
     public  List<Brands> findAllByStoreId(int storeId){
-        SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
+
         String key="findAllBrands-"+storeId;
         List<Brands> items = (List<Brands>) simpleCacheManager.get(key);
         if(items == null){
@@ -61,18 +65,6 @@ public class BrandService extends BaseService {
 
         return results;
 
-//        Stream<Brands> personsOver18 = items.stream().filter(p ->
-//                p.getBrandCode() == brandCode &&
-//                        p.getStoreId()  == storeId);
-//
-//
-//        return  personsOver18.collect(Collectors.toList());
-
-//        Finder finder = FinderFactory.getInstance();
-//        finder.addFilterEqual("storeId", storeId);
-//        finder.addFilterEqual("brandCode", brandCode);
-//
-//        return brandDao.findWithFinder(finder);
     }
 
 

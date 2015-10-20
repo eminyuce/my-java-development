@@ -38,11 +38,11 @@ public class ShopStyleApiService {
     @Transactional
     public void writeApiToDatabase() {
 
-        int storeId=2;
+        int storeId=51;
         ShopStyle api = new ShopStyle("uid121-30959989-77");
         ProductQuery pp = new ProductQuery();
 
-
+        int index=1000;
 
         ProductSearchResponse response = null;
         try {
@@ -51,6 +51,7 @@ public class ShopStyleApiService {
             for (Brand b: brandListResponse.getBrands()) {
                 Brands brandItem = brandService.SaveBrand(storeId, b.getId()+"",b.getName(),b.getUrl());
             }
+            brandService.removeCache(storeId);
             Category oo = null;
             CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
             Category[] cats = categoryListResponse.getCategories();
@@ -74,10 +75,16 @@ public class ShopStyleApiService {
                     RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
                     BrandHistogramEntry [] brandHistogram = histograms.getBrandHistogram();
 
+
+                    break;
+
+                }
+                index--;
+
+                if(index == 0){
                     break;
                 }
 
-                break;
             }
 
 

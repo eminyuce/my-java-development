@@ -81,5 +81,36 @@ public class ProductCategoryService extends BaseService {
         }
         return item;
     }
+//
+//    public void CreateTreeView(TreeView tree, string lang)
+//    {
+//
+//        var roots = from s in db.Navigations where s.ParentID == 0 && s.Lang == lang orderby s.NavigationOrdering select s;
+//
+//        foreach (Navigation item in roots)
+//        {
+//            TreeNode node = new TreeNode();
+//            node.Checked = item.State.Value;
+//            node.ToolTip = item.PageShortDesc;
+//            node.SelectAction = TreeNodeSelectAction.SelectExpand;
+//            node.Text = item.PageName;
+//            node.Value = item.ID.ToString();
+//            tree.Nodes.Add(node);
+//            CreateChildTree(node, item.ID, lang);
+//        }
+//
+//    }
+//    private void CreateChildTree(TreeNode node, int categoryID, string lang)
+//    {
+//        var childs = from s in db.Navigations where s.ParentID == categoryID && s.Lang == lang orderby s.NavigationOrdering select s;
+//
+//
+//        for (Navigation item in childs)
+//        {
+//
+//            CreateChildTree(tn, item.ID, lang);
+//        }
+//
+//    }
 
 }
