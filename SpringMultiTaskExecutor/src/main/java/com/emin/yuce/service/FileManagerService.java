@@ -4,6 +4,7 @@ import com.emin.yuce.genericDao.GDao;
 import com.emin.yuce.genericDao.SimpleDao;
 import com.emin.yuce.models.Brands;
 import com.emin.yuce.models.FileManagers;
+import com.emin.yuce.models.ProductFiles;
 import com.emin.yuce.models.Products;
 import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
@@ -79,7 +80,12 @@ public class FileManagerService extends BaseService {
                 String fileName = product.getName()+",  " +imageSize.getSizeName().name()+" = "+imageSize.getWidth()+" × "+imageSize.getHeight();
                 fileManager.setOriginalFilename(fileName);
                 fileManager.setModifiedDate(new Date());
-
+                fileManager.setContentLength(0);
+                fileManager.setGoogleImageId("");
+                fileManager.setTitle("");
+                fileManager.setContentType("jpg");
+                fileManager.setIconLink("");
+                fileManager.setThumbnailLink("");
                 fileManagers.add(fileManager);
 
             }catch (Exception e){
@@ -90,12 +96,25 @@ public class FileManagerService extends BaseService {
 
         }
         this.fileManagerDao.saveOrUpdateAll(fileManagers);
+        List<ProductFiles> productFilesList = new ArrayList<ProductFiles>();
         for (FileManagers f : fileManagers){
 
+            try{
+
+                ProductFiles productFiles = new ProductFiles();
+
+                productFiles.setFileManagerId(f.getId());
+                productFiles.setIsMainImage(false);
+                productFiles.setProductId(product.getId());
+                productFilesList.add(productFiles);
+
+            }catch (Exception e){
+                LOGGER.error(e.getMessage(),e);
+
+            }
         }
 
-
-
+        productFileService.saveOrUpdateAllProductFiles(productFilesList);
 
     }
 

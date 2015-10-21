@@ -8,6 +8,8 @@ import com.emin.yuce.util.SimpleCacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 @Service
 @Transactional
 public class ProductFileService {
@@ -20,6 +22,10 @@ public class ProductFileService {
     @Transactional
     public Integer count(){
         return productFilesDao.count();
+    }
+    @Transactional
+    public void saveOrUpdateAllProductFiles(Collection<ProductFiles> productFilesCollection){
+        productFilesDao.saveOrUpdateAll(productFilesCollection);
     }
 
 }
