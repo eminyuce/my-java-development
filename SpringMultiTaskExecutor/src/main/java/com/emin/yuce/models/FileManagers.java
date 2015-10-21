@@ -66,6 +66,22 @@ public class FileManagers implements Serializable {
     private String fileStatus;
     @Column(name = "ImageSourceType", length = 50)
     private String imageSourceType;
+    @Column(name = "FileSize", length = 50)
+    private String fileSize;
+
+
+    public String getFileSize() {
+        return fileSize;
+    }
+
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public boolean isState() {
+        return state;
+    }
+
 
     public FileManagers() {
     }

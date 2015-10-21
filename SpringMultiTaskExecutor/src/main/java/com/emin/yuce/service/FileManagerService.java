@@ -74,7 +74,8 @@ public class FileManagerService extends BaseService {
                 fileManager.setOrdering(1);
                 fileManager.setUpdatedDate(new Date());
                 fileManager.setImageSourceType("ShopStyle");
-                fileManager.setFileStatus(imageSize.getSizeName().name());
+                fileManager.setFileStatus("success");
+                fileManager.setFileSize(imageSize.getSizeName().name());
                 fileManager.setState(true);
                 fileManager.setIsCarousel(false);
                 String fileName = product.getName()+",  " +imageSize.getSizeName().name()+" = "+imageSize.getWidth()+" × "+imageSize.getHeight();
