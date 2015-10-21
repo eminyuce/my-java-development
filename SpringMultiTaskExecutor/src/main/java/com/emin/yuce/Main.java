@@ -17,6 +17,7 @@ package com.emin.yuce;
 
 import java.util.Scanner;
 
+import com.emin.yuce.service.ProductCategoryService;
 import com.emin.yuce.service.ShopStyleApiService;
 import com.shopstyle.api.*;
 import com.shopstyle.bo.*;

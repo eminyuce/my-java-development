@@ -35,6 +35,24 @@ public class ProductCategoryService extends BaseService {
         }
         return items;
     }
+    @Transactional
+    public void updateParentId(int storeId) throws Exception {
+        List<ProductCategories> items = this.findAllByStoreId(storeId);
+        for (ProductCategories p : items){
+            String parentCategoryApiId=p.getApiCategoryParentId();
+            Finder finder = FinderFactory.getInstance();
+            finder.addFilterEqual("ApiCategoryParentId", p.getApiCategoryId());
+            finder.addFilterEqual("parentId", 0);
+            List<ProductCategories>  result = productCategoryDao.findWithFinder(finder);
+            for (ProductCategories p1 : result){
+                p1.setParentId(p.getId());
+            }
+            productCategoryDao.saveOrUpdateAll(result);
+        }
+
+
+
+    }
 
     @Transactional
     public List<ProductCategories> findAllApiCategoryId(int storeId, String categoryId, String parentId) throws Exception {
@@ -76,6 +94,11 @@ public class ProductCategoryService extends BaseService {
             item.setApiCategoryId(categoryId);
             item.setApiCategoryParentId(parentId);
             this.saveOrUpdate(this.productCategoryDao, item);
+
+
+
+
+
         }else{
             item = productCategoriesList.get(0);
         }

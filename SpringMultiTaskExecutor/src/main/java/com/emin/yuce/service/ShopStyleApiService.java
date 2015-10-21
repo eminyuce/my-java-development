@@ -94,6 +94,11 @@ public class ShopStyleApiService {
             e.printStackTrace();
         }
 
+        try {
+            productCategoryService.updateParentId(storeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
