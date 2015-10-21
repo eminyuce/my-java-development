@@ -56,7 +56,7 @@ public class ProductService  extends BaseService {
         List<Products> items = this.findAllByStoreId(storeId);
         List<Products> results = new ArrayList<Products>();
         for (Products p : items){
-            if(p.getProductCode().equals(productCode)){
+             if(p.getProductCode().equals(productCode)){
                 results.add(p);
             }
         }

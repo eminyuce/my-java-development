@@ -104,7 +104,7 @@ public class FileManagerService extends BaseService {
                 ProductFiles productFiles = new ProductFiles();
 
                 productFiles.setFileManagerId(f.getId());
-                productFiles.setIsMainImage(false);
+                productFiles.setIsMainImage(f.getFileStatus().equals("Best"));
                 productFiles.setProductId(product.getId());
                 productFilesList.add(productFiles);
 

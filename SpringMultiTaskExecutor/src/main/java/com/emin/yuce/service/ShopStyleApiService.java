@@ -56,9 +56,9 @@ public class ShopStyleApiService {
             CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
             Category[] cats = categoryListResponse.getCategories();
             LOGGER.info("Total Categories " + cats.length);
-            int index2=50;
+            //int index2=50;
             for (Category c : cats) {
-                int index=5;
+               // int index=5;
                 ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getId(), c.getParentId());
                 LOGGER.info(productCategories.getId() + " " + c.getName());
                 ProductQuery query = pp.withCategory(c);
@@ -83,10 +83,10 @@ public class ShopStyleApiService {
 //                        break;
 //                    }
                 }
-                index2--;
-                if(index2 == 0){
-                    break;
-                }
+//                index2--;
+//                if(index2 == 0){
+//                    break;
+//                }
             }
 
 
