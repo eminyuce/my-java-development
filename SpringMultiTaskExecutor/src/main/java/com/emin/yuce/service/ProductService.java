@@ -9,11 +9,12 @@ import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
 import com.emin.yuce.util.SimpleCacheManager;
 import com.shopstyle.bo.*;
-import com.sun.media.jfxmedia.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -30,6 +31,9 @@ public class ProductService  extends BaseService {
     @Autowired
     public BrandService brandService;
 
+
+    @Autowired
+    public FileManagerService fileManagerService;
 
     public void removeCache(int storeId){
         String key="findAllProducts-"+storeId;
@@ -92,22 +96,51 @@ public class ProductService  extends BaseService {
             item.setVideoUrl(product.getClickUrl());
 
 
+
+
             try {
-                List<Brands> list = brandService.findBrandsByBrandCode(storeId, brand.getId() + "");
-                if (list.size() > 0) {
-                    item.setBrandId(list.get(0).getId());
+                if(brand != null){
+                    List<Brands> list = brandService.findBrandsByBrandCode(storeId, brand.getId() + "");
+                    if (list.size() > 0) {
+                        item.setBrandId(list.get(0).getId());
+                    }else{
+                        item.setBrandId(0);
+                    }
                 }else{
-                    item.setBrandId(0);
+                    item.setBrandId(-2);
                 }
 
+
             } catch (Exception e) {
+
                 item.setBrandId(-1);
-                LOGGER.error(e.getMessage()+" storeId : "+storeId+" Brand Id= "+brand.getId()+" Brand name= "+brand.getName(),e);
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                String exceptionAsString = sw.toString();
+                LOGGER.error(exceptionAsString,e);
                 e.printStackTrace();
             }
 
 
             this.saveOrUpdate(this.productDao, item);
+
+
+            try {
+
+
+                Image image = product.getImage();
+                String imageId = image.getId();
+                fileManagerService.SaveFileManagers(storeId,image,item);
+
+            }    catch (Exception e) {
+
+
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                String exceptionAsString = sw.toString();
+                LOGGER.error(exceptionAsString,e);
+                e.printStackTrace();
+            }
         }else{
             item = productResultList.get(0);
         }
