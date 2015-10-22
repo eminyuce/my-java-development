@@ -24,6 +24,9 @@ public class Products implements Serializable {
     private Integer id;
     @Column(name = "StoreId")
     private Integer storeId;
+
+    @Column(name = "RetailerId")
+    private Integer retailerId;
     @Basic(optional = false)
     @Column(name = "ProductCategoryId", nullable = false)
     private int productCategoryId;
@@ -79,6 +82,18 @@ public class Products implements Serializable {
         this.price = price;
         this.discount = discount;
     }
+
+
+
+    public Integer getRetailerId() {
+        return retailerId;
+    }
+
+    public void setRetailerId(Integer retailerId) {
+        this.retailerId = retailerId;
+    }
+
+
 
     public Integer getId() {
         return id;

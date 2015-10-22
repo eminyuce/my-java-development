@@ -2,6 +2,7 @@ package com.emin.yuce.service;
 
 import com.emin.yuce.models.Brands;
 import com.emin.yuce.models.ProductCategories;
+import com.emin.yuce.models.Retailers;
 import com.shopstyle.api.*;
 import com.shopstyle.bo.Brand;
 import com.shopstyle.bo.Category;
@@ -31,6 +32,8 @@ public class ShopStyleApiService {
     @Autowired
     public ProductService productService;
 
+    @Autowired
+    public RetailerService retailerService;
 
     @Autowired
     public ProductCategoryService productCategoryService;
@@ -46,6 +49,10 @@ public class ShopStyleApiService {
 
         ProductSearchResponse response = null;
         try {
+            RetailerListResponse retailerListResponse =  api.getRetailers();
+            for (Retailer b: retailerListResponse.getRetailers()) {
+                Retailers brandItem = retailerService.SaveRetailers(storeId, b.getId()+"",b.getName(),b.getUrl());
+            }
 
             BrandListResponse brandListResponse  =   api.getBrands();
             for (Brand b: brandListResponse.getBrands()) {
@@ -68,7 +75,7 @@ public class ShopStyleApiService {
                   //  System.out.println(product.getName());
                     productService.saveProduct(storeId,product,
                             productCategories.getId(),
-                            product.getBrand());
+                            product.getBrand(),product.getRetailer());
 
                     LOGGER.info(product.getName());
                     LOGGER.info("Total product Count=" + response.getProducts().length);
@@ -94,11 +101,11 @@ public class ShopStyleApiService {
             e.printStackTrace();
         }
 
-        try {
-            productCategoryService.updateParentId(storeId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            productCategoryService.updateParentId(storeId);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 

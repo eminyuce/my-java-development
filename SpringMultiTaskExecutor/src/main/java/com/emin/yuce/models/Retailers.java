@@ -1,17 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.emin.yuce.models;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.*;
+
 
 @Entity
-@Table(name = "Labels")
-public class Labels implements Serializable {
+@Table(name = "Retailers")
+public class Retailers implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @Basic(optional = false)
@@ -20,8 +16,6 @@ public class Labels implements Serializable {
     private Integer id;
     @Column(name = "StoreId")
     private Integer storeId;
-    @Column(name = "ParentId")
-    private Integer parentId;
     @Column(name = "Name", length = 255)
     private String name;
     @Column(name = "UpdatedDate")
@@ -35,10 +29,33 @@ public class Labels implements Serializable {
     @Column(name = "State")
     private Boolean state;
 
-    public Labels() {
+    public String getRetailerCode() {
+        return retailerCode;
     }
 
-    public Labels(Integer id) {
+    public void setRetailerCode(String retailerCode) {
+        this.retailerCode = retailerCode;
+    }
+
+    @Column(name = "RetailerCode", length = 255)
+    private String retailerCode;
+
+    public String getRetailerUrl() {
+        return retailerUrl;
+    }
+
+    public void setRetailerUrl(String retailerUrl) {
+        this.retailerUrl = retailerUrl;
+    }
+
+    @Column(name = "RetailerUrl", length = 255)
+    public String retailerUrl;
+
+    public Retailers() {
+    }
+
+    public Retailers(Integer id) {
+
         this.id = id;
     }
 
@@ -56,14 +73,6 @@ public class Labels implements Serializable {
 
     public void setStoreId(Integer storeId) {
         this.storeId = storeId;
-    }
-
-    public Integer getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Integer parentId) {
-        this.parentId = parentId;
     }
 
     public String getName() {
@@ -116,10 +125,10 @@ public class Labels implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Labels)) {
+        if (!(object instanceof Retailers)) {
             return false;
         }
-        Labels other = (Labels) object;
+        Retailers other = (Retailers) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -128,7 +137,7 @@ public class Labels implements Serializable {
 
     @Override
     public String toString() {
-        return "javaapplication1.Labels[ id=" + id + " ]";
+        return "javaapplication1.Retailers[ id=" + id + " ]";
     }
-    
+
 }

@@ -31,6 +31,8 @@ public class ProductService  extends BaseService {
     @Autowired
     public BrandService brandService;
 
+    @Autowired
+    public RetailerService retailerService;
 
     @Autowired
     public FileManagerService fileManagerService;
@@ -69,7 +71,7 @@ public class ProductService  extends BaseService {
     public Products saveProduct(int storeId,
                                 Product product,
                                 Integer categoryId,
-                                Brand brand)  {
+                                Brand brand, Retailer retailer)  {
         Products item = new Products();
         List<Products> productResultList = null;
         try {
@@ -96,7 +98,7 @@ public class ProductService  extends BaseService {
             item.setVideoUrl(product.getClickUrl());
 
 
-
+            setProductRetailers(storeId, retailer, item);
 
             try {
                 if(brand != null){
@@ -143,12 +145,46 @@ public class ProductService  extends BaseService {
             }
         }else{
             item = productResultList.get(0);
+            if(setProductRetailers(storeId, retailer, item)){
+                this.saveOrUpdate(this.productDao, item);
+            }
         }
         return item;
 
-
     }
 
+    private boolean setProductRetailers(int storeId, Retailer retailer, Products item) {
+        try {
+            if(retailer != null){
+                List<Retailers> list = retailerService.findRetailersByProductCode(storeId, retailer.getId() + "");
+                if (list.size() > 0) {
+                    item.setRetailerId(list.get(0).getId());
+
+                    return true;
+                }else{
+                    item.setRetailerId(0);
+                }
+            }else{
+                item.setRetailerId(-2);
+            }
+
+
+
+
+        } catch (Exception e) {
+
+            item.setRetailerId(-1);
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            LOGGER.error(exceptionAsString,e);
+            e.printStackTrace();
+        }
+
+        return false;
+
+
+    }
 
 
 }
