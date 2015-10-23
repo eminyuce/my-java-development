@@ -50,7 +50,7 @@ public class RetailerService extends BaseService {
         List<Retailers> items = this.findAllByStoreId(storeId);
         List<Retailers> results = new ArrayList<Retailers>();
         for (Retailers p : items){
-            if(p.getRetailerCode().equals(retailerCode)){
+            if(p.getRetailerCode() != null && p.getRetailerCode().equals(retailerCode)){
                 results.add(p);
             }
         }

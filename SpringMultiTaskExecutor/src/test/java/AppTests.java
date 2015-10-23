@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import com.emin.yuce.service.RetailerService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +15,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/com/emin/yuce/OrderPersistenceTests-context.xml" })
+@ContextConfiguration(locations = { "file:src/main/resources/META-INF/spring/integration/spring-integration-context.xml" })
 public class AppTests {
 
     @SuppressWarnings("SpringJavaAutowiringInspection")
+
+
+    @Autowired
+    public RetailerService retailerService;
 
     @Before
     public void setup() {
@@ -28,7 +33,11 @@ public class AppTests {
     }
 
     @Test
-    public void simple() throws Exception {
-
+    public void findAllByStoreId() throws Exception {
+        retailerService.findAllByStoreId(51);
+    }
+    @Test
+    public void findRetailersByProductCode() throws Exception {
+        retailerService.findRetailersByProductCode(51,"1");
     }
 }
