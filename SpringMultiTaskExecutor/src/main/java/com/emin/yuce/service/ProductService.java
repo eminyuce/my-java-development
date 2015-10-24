@@ -29,6 +29,9 @@ public class ProductService  extends BaseService {
     protected GDao<Products> productDao;
 
     @Autowired
+    public ProductAttributeService productAttributeService;
+
+    @Autowired
     public BrandService brandService;
 
     @Autowired
@@ -134,21 +137,62 @@ public class ProductService  extends BaseService {
                 String imageId = image.getId();
                 fileManagerService.SaveFileManagers(storeId,image,item);
 
-            }    catch (Exception e) {
-
-
+            } catch (Exception e) {
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
                 String exceptionAsString = sw.toString();
                 LOGGER.error(exceptionAsString,e);
                 e.printStackTrace();
             }
+
+            try {
+
+
+                Image image = product.getImage();
+                String imageId = image.getId();
+                fileManagerService.SaveFileManagers(storeId,image,item);
+
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                e.printStackTrace(new PrintWriter(sw));
+                String exceptionAsString = sw.toString();
+                LOGGER.error(exceptionAsString,e);
+                e.printStackTrace();
+            }
+
+
         }else{
-            item = productResultList.get(0);
-            if(setProductRetailers(storeId, retailer, item)){
+            item = productResultList != null ? productResultList.get(0) : null;
+            if(item != null && setProductRetailers(storeId, retailer, item)){
                 this.saveOrUpdate(this.productDao, item);
             }
         }
+
+        try {
+
+            String pppp=product.getSeeMoreLabel();
+            ProductColor[]  pColor = product.getColors();
+
+            for (ProductColor p : pColor){
+                Image m=p.getImage();
+                String wUrl = p.getSwatchUrl();
+                Color [] colors = p.getCanonicalColors();
+                String name = p.getName();
+                for (Color c : colors){
+                     System.out.println(c.getName());
+
+
+                }
+            }
+
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            LOGGER.error(exceptionAsString,e);
+            e.printStackTrace();
+        }
+
         return item;
 
     }

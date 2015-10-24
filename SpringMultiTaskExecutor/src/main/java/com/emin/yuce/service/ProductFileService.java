@@ -23,6 +23,8 @@ public class ProductFileService {
     public Integer count(){
         return productFilesDao.count();
     }
+
+
     @Transactional
     public void saveOrUpdateAllProductFiles(Collection<ProductFiles> productFilesCollection){
         productFilesDao.saveOrUpdateAll(productFilesCollection);
