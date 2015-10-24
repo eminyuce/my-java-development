@@ -12,7 +12,7 @@ import java.util.Collection;
 
 @Service
 @Transactional
-public class ProductFileService {
+public class ProductFileService extends BaseService {
 
     private SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
 

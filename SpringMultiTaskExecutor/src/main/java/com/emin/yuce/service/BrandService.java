@@ -52,7 +52,6 @@ public class BrandService extends BaseService {
     }
 
     @Transactional
-
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
         List<Brands> items = this.findAllByStoreId(storeId);
         List<Brands> results = new ArrayList<Brands>();
