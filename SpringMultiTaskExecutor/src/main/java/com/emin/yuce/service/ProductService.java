@@ -58,7 +58,9 @@ public class ProductService  extends BaseService {
     }
     @Transactional
     public List<Products> findProductsByProductCode(int storeId, String productCode) throws Exception {
-        List<Products> items = this.findAllByStoreId(storeId);
+        Finder finder = FinderFactory.getInstance();
+        finder.addFilterEqual("storeId", storeId);
+        List<Products> items = productDao.findWithFinder(finder);
         List<Products> results = new ArrayList<Products>();
         for (Products p : items){
              if(p.getProductCode().equals(productCode)){

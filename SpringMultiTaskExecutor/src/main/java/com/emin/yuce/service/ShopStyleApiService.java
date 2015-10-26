@@ -41,7 +41,7 @@ public class ShopStyleApiService {
     @Transactional
     public void writeApiToDatabase() {
 
-        int storeId=51;
+        int storeId=52;
         ShopStyle api = new ShopStyle("uid121-30959989-77");
         ProductQuery pp = new ProductQuery();
 
@@ -53,7 +53,7 @@ public class ShopStyleApiService {
             for (Retailer b: retailerListResponse.getRetailers()) {
                 Retailers brandItem = retailerService.SaveRetailers(storeId, b.getId()+"",b.getName(),b.getUrl());
             }
-
+            retailerService.removeCache(storeId);
             BrandListResponse brandListResponse  =   api.getBrands();
             for (Brand b: brandListResponse.getBrands()) {
                 Brands brandItem = brandService.SaveBrand(storeId, b.getId()+"",b.getName(),b.getUrl());

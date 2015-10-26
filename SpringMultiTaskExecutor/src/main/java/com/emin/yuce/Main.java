@@ -60,13 +60,13 @@ public final class Main {
                 new ClassPathXmlApplicationContext("classpath:META-INF/spring/integration/*-context.xml");
 
         LOGGER.info("Starting application");
-        TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
-        exampleService.printMessages();
+//        TaskExecutorExampleService exampleService = context.getBean(TaskExecutorExampleService.class);
+//        exampleService.printMessages();
         LOGGER.info("Exiting application...bye.");
         LOGGER.info("Exiting application...bye.................................................................");
         System.out.println("It is begun");
-      //  ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
-       // shopStyleApiService.writeApiToDatabase();
+        ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
+        shopStyleApiService.writeApiToDatabase();
 
 
         System.out.println("It is done");
