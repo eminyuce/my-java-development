@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ProductService  extends BaseService {
+public class ProductService extends BaseService {
 
     private SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
     @SimpleDao(Products.class)
@@ -35,35 +35,45 @@ public class ProductService  extends BaseService {
     public BrandService brandService;
 
     @Autowired
+    public LabelService labelService;
+
+
+    @Autowired
     public RetailerService retailerService;
+
+    @Autowired
+    public ProductAttributeRelationService productAttributeRelationService;
+
 
     @Autowired
     public FileManagerService fileManagerService;
 
-    public void removeCache(int storeId){
-        String key="findAllProducts-"+storeId;
+    public void removeCache(int storeId) {
+        String key = "findAllProducts-" + storeId;
         simpleCacheManager.clear(key);
     }
+
     @Transactional
-    public  List<Products> findAllByStoreId(int storeId){
-        String key="findAllProducts-"+storeId;
+    public List<Products> findAllByStoreId(int storeId) {
+        String key = "findAllProducts-" + storeId;
         List<Products> items = (List<Products>) simpleCacheManager.get(key);
-        if(items == null){
+        if (items == null) {
             Finder finder = FinderFactory.getInstance();
             finder.addFilterEqual("storeId", storeId);
             items = productDao.findWithFinder(finder);
-            simpleCacheManager.put(key,items);
+            simpleCacheManager.put(key, items);
         }
         return items;
     }
+
     @Transactional
     public List<Products> findProductsByProductCode(int storeId, String productCode) throws Exception {
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("storeId", storeId);
         List<Products> items = productDao.findWithFinder(finder);
         List<Products> results = new ArrayList<Products>();
-        for (Products p : items){
-             if(p.getProductCode().equals(productCode)){
+        for (Products p : items) {
+            if (p.getProductCode().equals(productCode)) {
                 results.add(p);
             }
         }
@@ -76,15 +86,15 @@ public class ProductService  extends BaseService {
     public Products saveProduct(int storeId,
                                 Product product,
                                 Integer categoryId,
-                                Brand brand, Retailer retailer)  {
+                                Brand brand, Retailer retailer) {
         Products item = new Products();
         List<Products> productResultList = null;
         try {
-            productResultList = findProductsByProductCode(storeId, product.getId()+"");
+            productResultList = findProductsByProductCode(storeId, product.getId() + "");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(productResultList != null && productResultList.size()  == 0) {
+        if (productResultList != null && productResultList.size() == 0) {
             item.setProductCategoryId(categoryId);
             item.setName(product.getName());
             item.setCreatedDate(new Date());
@@ -98,7 +108,7 @@ public class ProductService  extends BaseService {
             item.setType("product");
             item.setProductCode(product.getId() + "");
             item.setImageState(true);
-            item.setTotalRating(1);
+            item.setTotalRating(2);
             item.setUnitsInStock(10);
             item.setVideoUrl(product.getClickUrl());
 
@@ -106,14 +116,14 @@ public class ProductService  extends BaseService {
             setProductRetailers(storeId, retailer, item);
 
             try {
-                if(brand != null){
+                if (brand != null) {
                     List<Brands> list = brandService.findBrandsByBrandCode(storeId, brand.getId() + "");
                     if (list.size() > 0) {
                         item.setBrandId(list.get(0).getId());
-                    }else{
+                    } else {
                         item.setBrandId(0);
                     }
-                }else{
+                } else {
                     item.setBrandId(-2);
                 }
 
@@ -124,7 +134,7 @@ public class ProductService  extends BaseService {
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
                 String exceptionAsString = sw.toString();
-                LOGGER.error(exceptionAsString,e);
+                LOGGER.error(exceptionAsString, e);
                 e.printStackTrace();
             }
 
@@ -132,66 +142,79 @@ public class ProductService  extends BaseService {
             this.saveOrUpdate(this.productDao, item);
 
 
-            try {
-
-
-                Image image = product.getImage();
-                String imageId = image.getId();
-                fileManagerService.SaveFileManagers(storeId,image,item);
-
-            } catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                String exceptionAsString = sw.toString();
-                LOGGER.error(exceptionAsString,e);
-                e.printStackTrace();
-            }
-
-            try {
-
-
-                Image image = product.getImage();
-                String imageId = image.getId();
-                fileManagerService.SaveFileManagers(storeId,image,item);
-
-            } catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                e.printStackTrace(new PrintWriter(sw));
-                String exceptionAsString = sw.toString();
-                LOGGER.error(exceptionAsString,e);
-                e.printStackTrace();
-            }
-
-
-        }else{
+        } else {
             item = productResultList != null ? productResultList.get(0) : null;
-            if(item != null && setProductRetailers(storeId, retailer, item)){
+            if (item != null && setProductRetailers(storeId, retailer, item)) {
                 this.saveOrUpdate(this.productDao, item);
             }
         }
 
+
         try {
 
-            String pppp=product.getSeeMoreLabel();
-            ProductColor[]  pColor = product.getColors();
 
-            for (ProductColor p : pColor){
-                Image m=p.getImage();
+            Image image = product.getImage();
+            String imageId = image.getId();
+            fileManagerService.SaveFileManagers(storeId, image, item);
+
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            LOGGER.error(exceptionAsString, e);
+            e.printStackTrace();
+        }
+
+
+        try {
+
+
+            int productAttributesId = productAttributeService.findAllByProductName(storeId, "Color").get(0).getId();
+
+            ProductColor[] pColor = product.getColors();
+
+            for (ProductColor p : pColor) {
+                Image m = p.getImage();
                 String wUrl = p.getSwatchUrl();
-                Color [] colors = p.getCanonicalColors();
+                Color[] colors = p.getCanonicalColors();
                 String name = p.getName();
-                for (Color c : colors){
-                     System.out.println(c.getName());
-
-
+                for (Color c : colors) {
+                    System.out.println(c.getName());
+                    productAttributeRelationService.saveProductAttributeRelations(productAttributesId, item.getId(), c.getName());
                 }
+            }
+
+            productAttributesId = productAttributeService.findAllByProductName(storeId, "Size").get(0).getId();
+
+            ProductSize[] pSize = product.getSizes();
+            for (ProductSize p : pSize) {
+                String name = p.getName();
+                productAttributeRelationService.saveProductAttributeRelations(productAttributesId, item.getId(), name);
             }
 
         } catch (Exception e) {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
             String exceptionAsString = sw.toString();
-            LOGGER.error(exceptionAsString,e);
+            LOGGER.error(exceptionAsString, e);
+            e.printStackTrace();
+        }
+
+
+        try {
+
+
+            String labelsText = product.getSeeMoreLabel();
+//            if (labelsText != null) {
+//                labelService.saveLabels(storeId, labelsText, item.getId());
+//            }
+
+
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String exceptionAsString = sw.toString();
+            LOGGER.error(exceptionAsString, e);
             e.printStackTrace();
         }
 
@@ -201,20 +224,18 @@ public class ProductService  extends BaseService {
 
     private boolean setProductRetailers(int storeId, Retailer retailer, Products item) {
         try {
-            if(retailer != null){
+            if (retailer != null) {
                 List<Retailers> list = retailerService.findRetailersByProductCode(storeId, retailer.getId() + "");
                 if (list.size() > 0) {
                     item.setRetailerId(list.get(0).getId());
 
                     return true;
-                }else{
+                } else {
                     item.setRetailerId(0);
                 }
-            }else{
+            } else {
                 item.setRetailerId(-2);
             }
-
-
 
 
         } catch (Exception e) {
@@ -223,7 +244,7 @@ public class ProductService  extends BaseService {
             StringWriter sw = new StringWriter();
             e.printStackTrace(new PrintWriter(sw));
             String exceptionAsString = sw.toString();
-            LOGGER.error(exceptionAsString,e);
+            LOGGER.error(exceptionAsString, e);
             e.printStackTrace();
         }
 

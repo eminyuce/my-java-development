@@ -15,4 +15,14 @@ public class LabelLineService extends BaseService {
     @SimpleDao(LabelLines.class)
     protected GDao<LabelLines> labelLineDao;
 
+    public void saveLabelLine(Integer labelId, int itemId, String itemType)
+    {
+        LabelLines labelLines = new LabelLines();
+        labelLines.setItemId(itemId);
+        labelLines.setItemType(itemType);
+        labelLines.setLabelId(labelId);
+
+        this.saveOrUpdate(labelLineDao,labelLines);
+
+    }
 }

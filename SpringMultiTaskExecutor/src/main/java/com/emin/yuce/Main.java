@@ -15,8 +15,11 @@
  */
 package com.emin.yuce;
 
+import java.util.List;
 import java.util.Scanner;
 
+import com.emin.yuce.models.Labels;
+import com.emin.yuce.service.LabelService;
 import com.emin.yuce.service.ProductCategoryService;
 import com.emin.yuce.service.ShopStyleApiService;
 import com.shopstyle.api.*;
@@ -66,11 +69,8 @@ public final class Main {
         LOGGER.info("Exiting application...bye.................................................................");
         System.out.println("It is begun");
         ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
-        shopStyleApiService.writeApiToDatabase();
+       shopStyleApiService.writeApiToDatabase();
 
-
-        System.out.println("It is done");
-        System.exit(0);
 
     }
 

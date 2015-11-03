@@ -34,7 +34,7 @@ public class FileManagerService extends BaseService {
     public ProductFileService productFileService;
 
     public void removeCache(int storeId){
-        String key="findAllBrands-"+storeId;
+        String key="findAllFileManagers-"+storeId;
         simpleCacheManager.clear(key);
     }
 
@@ -55,6 +55,10 @@ public class FileManagerService extends BaseService {
 
     @Transactional
     public void SaveFileManagers(int storeId, Image image, Products product) {
+
+        if(productFileService.findAllByProductId(product.getId()).size() > 0){
+            return;
+        }
 
         List<FileManagers> fileManagers = new ArrayList<FileManagers>();
         Map<ImageSize.SizeName, ImageSize>  sizeNameImageSizeMap = image.getSizes();
@@ -91,7 +95,6 @@ public class FileManagerService extends BaseService {
 
             }catch (Exception e){
                 LOGGER.error(e.getMessage(),e);
-
             }
 
 

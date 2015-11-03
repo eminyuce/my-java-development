@@ -41,7 +41,7 @@ public class ShopStyleApiService {
     @Transactional
     public void writeApiToDatabase() {
 
-        int storeId=52;
+        int storeId=53;
         ShopStyle api = new ShopStyle("uid121-30959989-77");
         ProductQuery pp = new ProductQuery();
 
@@ -86,14 +86,9 @@ public class ShopStyleApiService {
 
 //                    index--;
 //
-//                    if(index == 0){
-//                        break;
-//                    }
+
                 }
-//                index2--;
-//                if(index2 == 0){
-//                    break;
-//                }
+
             }
 
 

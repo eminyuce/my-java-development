@@ -57,7 +57,7 @@ public class BrandService extends BaseService {
         List<Brands> results = new ArrayList<Brands>();
 
         for (Brands p : items){
-            if(p.getBrandCode().equals(brandCode)){
+            if(p.getBrandCode() != null && p.getBrandCode().equals(brandCode)){
                 results.add(p);
             }
         }

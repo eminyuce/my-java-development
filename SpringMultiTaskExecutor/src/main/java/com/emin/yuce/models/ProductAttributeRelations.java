@@ -26,7 +26,7 @@ public class ProductAttributeRelations implements Serializable {
     @Column(name = "ProductId")
     private Integer productId;
     @Column(name = "ProductAttributeValue")
-    private Integer productAttributeValue;
+    private String productAttributeValue;
 
     public ProductAttributeRelations() {
     }
@@ -59,11 +59,11 @@ public class ProductAttributeRelations implements Serializable {
         this.productId = productId;
     }
 
-    public Integer getProductAttributeValue() {
+    public String getProductAttributeValue() {
         return productAttributeValue;
     }
 
-    public void setProductAttributeValue(Integer productAttributeValue) {
+    public void setProductAttributeValue(String productAttributeValue) {
         this.productAttributeValue = productAttributeValue;
     }
 
