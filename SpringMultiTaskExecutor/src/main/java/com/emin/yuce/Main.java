@@ -69,9 +69,13 @@ public final class Main {
         LOGGER.info("Exiting application...bye.................................................................");
         System.out.println("It is begun");
         ShopStyleApiService  shopStyleApiService =  context.getBean(ShopStyleApiService.class);
-       shopStyleApiService.writeApiToDatabase();
-
-
+        shopStyleApiService.writeApiToDatabase();
+        ProductCategoryService  productCategoryService =  context.getBean(ProductCategoryService.class);
+//        try {
+//            productCategoryService.updateParentId(53);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 

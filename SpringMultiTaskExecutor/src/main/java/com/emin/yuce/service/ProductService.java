@@ -51,6 +51,7 @@ public class ProductService extends BaseService {
     public void removeCache(int storeId) {
         String key = "findAllProducts-" + storeId;
         simpleCacheManager.clear(key);
+
     }
 
     @Transactional
@@ -144,7 +145,10 @@ public class ProductService extends BaseService {
 
         } else {
             item = productResultList != null ? productResultList.get(0) : null;
-            if (item != null && setProductRetailers(storeId, retailer, item)) {
+            if (item != null) {
+                setProductRetailers(storeId, retailer, item);
+                item.setProductCategoryId(categoryId);
+                item.setPrice(product.getPrice());
                 this.saveOrUpdate(this.productDao, item);
             }
         }
@@ -179,7 +183,7 @@ public class ProductService extends BaseService {
                 Color[] colors = p.getCanonicalColors();
                 String name = p.getName();
                 for (Color c : colors) {
-                    System.out.println(c.getName());
+                 //   System.out.println(c.getName());
                     productAttributeRelationService.saveProductAttributeRelations(productAttributesId, item.getId(), c.getName());
                 }
             }

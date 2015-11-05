@@ -60,35 +60,31 @@ public class ShopStyleApiService {
             }
             brandService.removeCache(storeId);
             Category oo = null;
-            CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
+
+            CategoryListResponse categoryListResponse = api.getCategories(oo, 1);
             Category[] cats = categoryListResponse.getCategories();
             LOGGER.info("Total Categories " + cats.length);
-            //int index2=50;
+            int index=25;
             for (Category c : cats) {
-               // int index=5;
+
                 ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getId(), c.getParentId());
                 LOGGER.info(productCategories.getId() + " " + c.getName());
                 ProductQuery query = pp.withCategory(c);
                 response = api.getProducts(query);
 
                 for (Product product : response.getProducts()) {
-                  //  System.out.println(product.getName());
                     productService.saveProduct(storeId,product,
                             productCategories.getId(),
                             product.getBrand(),product.getRetailer());
 
-                    LOGGER.info(product.getName());
-                    LOGGER.info("Total product Count=" + response.getProducts().length);
 
-//                    CategoryHistogramEntry[] categoryHistogram = histograms.getCategoryHistogram();
-//                    RetailerHistogramEntry[] retailerHistogram = histograms.getRetailerHistogram();
-//                    BrandHistogramEntry [] brandHistogram = histograms.getBrandHistogram();
-
-//                    index--;
-//
 
                 }
 
+                if(index == 0){
+                    return;
+                }
+                index--;
             }
 
 
@@ -96,11 +92,11 @@ public class ShopStyleApiService {
             e.printStackTrace();
         }
 
-//        try {
-//            productCategoryService.updateParentId(storeId);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+            productCategoryService.updateParentId(storeId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
