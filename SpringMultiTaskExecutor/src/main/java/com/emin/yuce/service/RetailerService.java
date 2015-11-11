@@ -10,6 +10,7 @@ import com.emin.yuce.util.FinderFactory;
 import com.emin.yuce.util.SimpleCacheManager;
 import com.shopstyle.bo.Retailer;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ public class RetailerService extends BaseService {
         simpleCacheManager.clear(key);
     }
     @Transactional
+    @Rollback(false)
     public  List<Retailers> findAllByStoreId(int storeId){
         String key="findAllRetailers-"+storeId;
         List<Retailers> items = (List<Retailers>) simpleCacheManager.get(key);
@@ -46,6 +48,7 @@ public class RetailerService extends BaseService {
         return items;
     }
     @Transactional
+    @Rollback(false)
     public List<Retailers> findRetailersByProductCode(int storeId, String retailerCode) throws Exception {
         List<Retailers> items = this.findAllByStoreId(storeId);
         List<Retailers> results = new ArrayList<Retailers>();
@@ -60,6 +63,7 @@ public class RetailerService extends BaseService {
 
 
     @Transactional
+    @Rollback(false)
     public Retailers SaveRetailers(int storeId,String retailerId,String name, String url) {
         Retailers item = new Retailers();
 

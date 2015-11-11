@@ -9,6 +9,7 @@ import com.emin.yuce.util.FinderFactory;
 import com.fasterxml.jackson.databind.deser.Deserializers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -27,6 +28,7 @@ public class LabelService extends BaseService {
 
 
     @Transactional
+    @Rollback(false)
     public List<Labels> findAllByName(int storeId,String name){
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("name", name);
@@ -35,6 +37,7 @@ public class LabelService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public void saveLabels(int storeId,String name, int productId){
         Labels labels = new Labels();
         List<Labels> resultList = findAllByName(storeId, name);

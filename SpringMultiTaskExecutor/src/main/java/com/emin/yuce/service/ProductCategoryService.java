@@ -9,6 +9,7 @@ import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
 import com.emin.yuce.util.SimpleCacheManager;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class ProductCategoryService extends BaseService {
     protected GDao<ProductCategories> productCategoryDao;
 
     @Transactional
+    @Rollback(false)
     public List<ProductCategories> findAllByStoreId(int storeId){
         SimpleCacheManager simpleCacheManager = SimpleCacheManager.getInstance();
         String key="findAllProductCategories-"+storeId;
@@ -36,6 +38,7 @@ public class ProductCategoryService extends BaseService {
         return items;
     }
     @Transactional
+    @Rollback(false)
     public void updateParentId(int storeId) throws Exception {
         List<ProductCategories> items = this.findAllByStoreId(storeId);
         for (ProductCategories p : items){
@@ -55,6 +58,7 @@ public class ProductCategoryService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public List<ProductCategories> findAllApiCategoryId(int storeId, String categoryId, String parentId) throws Exception {
         List<ProductCategories> items = this.findAllByStoreId(storeId);
         List<ProductCategories> results = new ArrayList<ProductCategories>();
@@ -73,6 +77,7 @@ public class ProductCategoryService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public ProductCategories saveProductCategory(int storeId, String name, String categoryId, String parentId) {
         ProductCategories item = new ProductCategories();
         List<ProductCategories> productCategoriesList = null;

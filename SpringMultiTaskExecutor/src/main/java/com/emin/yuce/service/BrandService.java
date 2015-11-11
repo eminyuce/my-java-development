@@ -12,6 +12,7 @@ import com.jcabi.aspects.Cacheable;
 import com.shopstyle.bo.Brand;
 
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class BrandService extends BaseService {
         simpleCacheManager.clear(key);
     }
     @Transactional
+    @Rollback(false)
     public  List<Brands> findAllByStoreId(int storeId){
 
         String key="findAllBrands-"+storeId;
@@ -52,6 +54,7 @@ public class BrandService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public List<Brands> findBrandsByBrandCode(int storeId, String brandCode) throws Exception {
         List<Brands> items = this.findAllByStoreId(storeId);
         List<Brands> results = new ArrayList<Brands>();
@@ -68,6 +71,7 @@ public class BrandService extends BaseService {
 
 
     @Transactional
+    @Rollback(false)
     public List<Brands> findBrandsByName(int storeId,String name, String description) {
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("storeId", storeId);

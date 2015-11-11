@@ -9,6 +9,7 @@ import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
 import com.emin.yuce.util.SimpleCacheManager;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class ProductFileService extends BaseService {
 
 
     @Transactional
+    @Rollback(false)
     public List<ProductFiles> findAllByProductId(int productId) {
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("productId", productId);
@@ -37,6 +39,7 @@ public class ProductFileService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public void saveOrUpdateAllProductFiles(Collection<ProductFiles> productFilesCollection) {
         productFilesDao.saveOrUpdateAll(productFilesCollection);
     }

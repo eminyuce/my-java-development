@@ -6,6 +6,7 @@ import com.emin.yuce.models.*;
 import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class ProductAttributeRelationService extends BaseService{
     protected GDao<ProductAttributeRelations> productAttributeRelationDao;
 
     @Transactional
+    @Rollback(false)
     public List<ProductAttributeRelations> findAllByProductAttributeRelations(int productAttributeId,int productId,String value){
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("productAttributeId", productAttributeId);
@@ -25,7 +27,8 @@ public class ProductAttributeRelationService extends BaseService{
         finder.addFilterEqual("productAttributeValue", value);
         return productAttributeRelationDao.findWithFinder(finder);
     }
-
+    @Transactional
+    @Rollback(false)
     public void saveProductAttributeRelations(int productAttributeId,int productId,String value)
     {
         List<ProductAttributeRelations> resultList = findAllByProductAttributeRelations(productAttributeId,productId,value);

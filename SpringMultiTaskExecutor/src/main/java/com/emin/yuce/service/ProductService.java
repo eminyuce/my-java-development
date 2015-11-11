@@ -11,6 +11,7 @@ import com.emin.yuce.util.SimpleCacheManager;
 import com.shopstyle.bo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.PrintWriter;
@@ -55,6 +56,7 @@ public class ProductService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public List<Products> findAllByStoreId(int storeId) {
         String key = "findAllProducts-" + storeId;
         List<Products> items = (List<Products>) simpleCacheManager.get(key);
@@ -68,6 +70,7 @@ public class ProductService extends BaseService {
     }
 
     @Transactional
+    @Rollback(false)
     public List<Products> findProductsByProductCode(int storeId, String productCode) throws Exception {
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("storeId", storeId);
@@ -84,6 +87,7 @@ public class ProductService extends BaseService {
 
 
     @Transactional
+    @Rollback(false)
     public Products saveProduct(int storeId,
                                 Product product,
                                 Integer categoryId,

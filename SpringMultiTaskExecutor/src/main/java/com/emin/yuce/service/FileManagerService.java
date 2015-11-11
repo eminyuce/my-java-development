@@ -13,6 +13,7 @@ import com.shopstyle.bo.Image;
 import com.shopstyle.bo.ImageSize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -40,20 +41,16 @@ public class FileManagerService extends BaseService {
 
 
     @Transactional
-    public List<FileManagers> findAllByStoreId(int storeId){
-
-        String key="findAllFileManagers-"+storeId;
-        List<FileManagers> items = (List<FileManagers>) simpleCacheManager.get(key);
-        if(items == null){
-            Finder finder = FinderFactory.getInstance();
-            finder.addFilterEqual("storeId", storeId);
-            items = fileManagerDao.findWithFinder(finder);
-            simpleCacheManager.put(key,items);
-        }
-        return items;
+    @Rollback(false)
+    public List<FileManagers> findAllByStoreId(int storeId, String url){
+        Finder finder = FinderFactory.getInstance();
+        finder.addFilterEqual("storeId", storeId);
+        finder.addFilterEqual("webContentLink", url);
+        return fileManagerDao.findWithFinder(finder);
     }
 
     @Transactional
+    @Rollback(false)
     public void SaveFileManagers(int storeId, Image image, Products product) {
 
         if(productFileService.findAllByProductId(product.getId()).size() > 0){
@@ -69,30 +66,36 @@ public class FileManagerService extends BaseService {
 
                 ImageSize.SizeName sizeName = entry.getKey();
                 ImageSize imageSize = entry.getValue();
-                fileManager.setStoreId(storeId);
-                fileManager.setWebContentLink(imageSize.getUrl());
-                fileManager.setWidth(imageSize.getWidth());
-                fileManager.setHeight(imageSize.getHeight());
-                fileManager.setName(image.getId());
-                fileManager.setCreatedDate(new Date());
-                fileManager.setOrdering(1);
-                fileManager.setUpdatedDate(new Date());
-                fileManager.setImageSourceType("ShopStyle");
-                fileManager.setFileStatus("success");
-                fileManager.setFileSize(imageSize.getSizeName().name());
-                fileManager.setState(true);
-                fileManager.setIsCarousel(false);
-                String fileName = product.getName()+",  " +imageSize.getSizeName().name()+" = "+imageSize.getWidth()+" × "+imageSize.getHeight();
-                fileManager.setOriginalFilename(fileName);
-                fileManager.setModifiedDate(new Date());
-                fileManager.setContentLength(0);
-                fileManager.setGoogleImageId("");
-                fileManager.setTitle("");
-                fileManager.setContentType("jpg");
-                fileManager.setIconLink("");
-                fileManager.setThumbnailLink("");
-                fileManagers.add(fileManager);
+                List<FileManagers> sameFiles = findAllByStoreId(storeId,imageSize.getUrl());
+                if(sameFiles != null && sameFiles.size() == 0) {
 
+                    fileManager.setStoreId(storeId);
+                    fileManager.setWebContentLink(imageSize.getUrl());
+                    fileManager.setWidth(imageSize.getWidth());
+                    fileManager.setHeight(imageSize.getHeight());
+                    fileManager.setName(image.getId());
+                    fileManager.setCreatedDate(new Date());
+                    fileManager.setOrdering(1);
+                    fileManager.setUpdatedDate(new Date());
+                    fileManager.setImageSourceType("ShopStyle");
+                    fileManager.setFileStatus("success");
+                    fileManager.setFileSize(imageSize.getSizeName().name());
+                    fileManager.setState(true);
+                    fileManager.setIsCarousel(false);
+                    String fileName = product.getName() + ",  " + imageSize.getSizeName().name() + " = " + imageSize.getWidth() + " × " + imageSize.getHeight();
+                    fileManager.setOriginalFilename(fileName);
+                    fileManager.setModifiedDate(new Date());
+                    fileManager.setContentLength(0);
+                    fileManager.setGoogleImageId("");
+                    fileManager.setTitle("");
+                    fileManager.setContentType("jpg");
+                    fileManager.setIconLink("");
+                    fileManager.setThumbnailLink("");
+                    fileManagers.add(fileManager);
+
+                }else{
+                    fileManagers.add(sameFiles.get(0));
+                }
             }catch (Exception e){
                 LOGGER.error(e.getMessage(),e);
             }

@@ -9,6 +9,7 @@ import com.emin.yuce.util.Finder;
 import com.emin.yuce.util.FinderFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
@@ -26,6 +27,7 @@ public class ProductAttributeService extends BaseService{
     protected GDao<ProductAttributes> productAttributeDao;
 
     @Transactional
+    @Rollback(false)
     public List<ProductAttributes> findAllByProductName(int storeId,String name){
         Finder finder = FinderFactory.getInstance();
         finder.addFilterEqual("storeId", storeId);
@@ -34,6 +36,7 @@ public class ProductAttributeService extends BaseService{
     }
 
     @Transactional
+    @Rollback(false)
     public void SaveAttribute(int storeId,String name, int productId,String value){
 
         if(name == null){

@@ -7,6 +7,7 @@ import com.emin.yuce.models.Products;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -24,9 +25,11 @@ public  class BaseService {
 
 
     @Transactional
+    @Rollback(false)
     protected  <T> void saveOrUpdate(GDao<T> dao, T brands)   {
         try {
             dao.saveOrUpdate(brands);
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage(),e);
         }

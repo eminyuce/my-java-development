@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
@@ -39,6 +40,7 @@ public class ShopStyleApiService {
     public ProductCategoryService productCategoryService;
 
     @Transactional
+    @Rollback(false)
     public void writeApiToDatabase() {
 
         int storeId=53;
@@ -61,10 +63,10 @@ public class ShopStyleApiService {
             brandService.removeCache(storeId);
             Category oo = null;
 
-            CategoryListResponse categoryListResponse = api.getCategories(oo, 1);
+            CategoryListResponse categoryListResponse = api.getCategories(oo, 0);
             Category[] cats = categoryListResponse.getCategories();
             LOGGER.info("Total Categories " + cats.length);
-            int index=25;
+            int index=5;
             for (Category c : cats) {
 
                 ProductCategories productCategories = productCategoryService.saveProductCategory(storeId, c.getName(), c.getId(), c.getParentId());
@@ -82,7 +84,7 @@ public class ShopStyleApiService {
                 }
 
                 if(index == 0){
-                    return;
+
                 }
                 index--;
             }

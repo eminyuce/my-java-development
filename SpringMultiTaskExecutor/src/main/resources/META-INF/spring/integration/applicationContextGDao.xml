@@ -14,7 +14,7 @@
 
 
 
-
+    <context:annotation-config/>
     <context:component-scan base-package="com.emin.yuce"/>
 
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -75,7 +75,7 @@
 
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
-            <tx:method name="get" read-only="true"/>
+            <tx:method name="get"    read-only="true"/>
             <tx:method name="*"/>
         </tx:attributes>
     </tx:advice>
