@@ -54,6 +54,7 @@ public final class Main {
      */
     public static void main(final String... args)
     {
+        System.out.println("Testing");
         LOGGER.info("Testing...bye.");
         LOGGER.info("\n========================================================="
                   + "\n    "
