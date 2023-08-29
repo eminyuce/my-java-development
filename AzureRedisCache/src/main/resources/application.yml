@@ -1,0 +1,6 @@
+spring:
+  redis:
+    host: your-cache-name.redis.cache.windows.net
+    port: 6379
+    password: your-primary-or-secondary-connection-string
+    ssl: true
