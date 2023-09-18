@@ -30,13 +30,13 @@ import com.emin.yuce.service.StringConversionService;
  *
  * @author Gunnar Hillert
  * @version 1.0
- *
  */
 public final class Main {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
-    private Main() { }
+    private Main() {
+    }
 
     /**
      * Load the Spring Integration Application Context

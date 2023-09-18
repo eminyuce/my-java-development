@@ -26,228 +26,228 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /***
- * 
+ *
  * @author eminy 27-02-2012
  */
 public class XPathParser {
 
-	private static final Logger logger = Logger.getLogger(XPathParser.class);
+    private static final Logger logger = Logger.getLogger(XPathParser.class);
 
-	private String commandOutput;
-	private Document dom;
-	private String errorMessage;
+    private String commandOutput;
+    private Document dom;
+    private String errorMessage;
 
-	public XPathParser(String commandOutput) {
-		this.commandOutput = commandOutput;
-		this.dom = this.createDocument();
-	}
+    public XPathParser(String commandOutput) {
+        this.commandOutput = commandOutput;
+        this.dom = this.createDocument();
+    }
 
-	public boolean validateXmlOutput() {
+    public boolean validateXmlOutput() {
 
-		XPath xpath = XPathFactory.newInstance().newXPath();
-		XPathExpression expr = null;
-		NodeList nodes = null;
-		try {
-			expr = xpath.compile(String.format("//parent::%s", "ResponseBatch/Response"));
-			nodes = (NodeList) expr.evaluate(this.dom, XPathConstants.NODESET);
-			for (int i = 0; i < nodes.getLength(); i++) {
-				Node node = nodes.item(i);
-				NamedNodeMap namedNodeMap = node.getAttributes();
-				String status = namedNodeMap.getNamedItem("Status").getNodeValue();
-				if (status.equals("OKAY")) {
-					return true;
-				} else if (status.equals("WARNING")) {
-					NodeList childNodes = node.getChildNodes();
-					for (int j = 0; j < childNodes.getLength(); j++) {
-						Node warningNode = childNodes.item(j);
-						if (warningNode.getNodeName().equals("Warning")) {
-							NamedNodeMap warningNodeMap = warningNode.getAttributes();
-							String message = warningNodeMap.getNamedItem("Message").getNodeValue();
-							this.errorMessage = message;
-						}
-					}
-					return false;
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        XPathExpression expr = null;
+        NodeList nodes = null;
+        try {
+            expr = xpath.compile(String.format("//parent::%s", "ResponseBatch/Response"));
+            nodes = (NodeList) expr.evaluate(this.dom, XPathConstants.NODESET);
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node node = nodes.item(i);
+                NamedNodeMap namedNodeMap = node.getAttributes();
+                String status = namedNodeMap.getNamedItem("Status").getNodeValue();
+                if (status.equals("OKAY")) {
+                    return true;
+                } else if (status.equals("WARNING")) {
+                    NodeList childNodes = node.getChildNodes();
+                    for (int j = 0; j < childNodes.getLength(); j++) {
+                        Node warningNode = childNodes.item(j);
+                        if (warningNode.getNodeName().equals("Warning")) {
+                            NamedNodeMap warningNodeMap = warningNode.getAttributes();
+                            String message = warningNodeMap.getNamedItem("Message").getNodeValue();
+                            this.errorMessage = message;
+                        }
+                    }
+                    return false;
 
-				}
-			}
-		} catch (XPathExpressionException e) {
-			e.printStackTrace();
-		}
+                }
+            }
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	public Map<String, String> parseXmlOutput(String xPathExpression, int index) throws XPathExpressionException {
-		List<Map<String, String>> list = this.parseXmlOutput(xPathExpression);
-		if (list != null && !list.isEmpty()) {
-			if (index <= list.size()) {
-				return list.get(index);
-			} else {
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
+    public Map<String, String> parseXmlOutput(String xPathExpression, int index) throws XPathExpressionException {
+        List<Map<String, String>> list = this.parseXmlOutput(xPathExpression);
+        if (list != null && !list.isEmpty()) {
+            if (index <= list.size()) {
+                return list.get(index);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
 
-	public List<Map<String, String>> parseXmlOutput(String xPathExpression) throws XPathExpressionException {
+    public List<Map<String, String>> parseXmlOutput(String xPathExpression) throws XPathExpressionException {
 
-		List<Map<String, String>> resultMap = null;
+        List<Map<String, String>> resultMap = null;
 
-		if (this.dom != null) {
-			resultMap = this.parseDocument(xPathExpression);
+        if (this.dom != null) {
+            resultMap = this.parseDocument(xPathExpression);
 
-			if (resultMap != null && !resultMap.isEmpty()) {
-				return resultMap;
-			} else {
-				logger.error("No result map is created from the command output " + this.commandOutput
-						+ " with expression " + xPathExpression);
-				return null;
-			}
-		} else {
-			logger.error("No Document instance is created for the command output " + this.commandOutput);
-			return null;
-		}
-	}
-	
-	public Map<String, List<String>> parseXmlOutput(String xPathExpression, boolean returnMap) throws XPathExpressionException {
-		if (this.dom != null) {
-			Map<String, List<String>> map = this.parseDocument(xPathExpression, returnMap);
+            if (resultMap != null && !resultMap.isEmpty()) {
+                return resultMap;
+            } else {
+                logger.error("No result map is created from the command output " + this.commandOutput
+                        + " with expression " + xPathExpression);
+                return null;
+            }
+        } else {
+            logger.error("No Document instance is created for the command output " + this.commandOutput);
+            return null;
+        }
+    }
 
-			if (map != null && !map.isEmpty()) {
-				return map;
-			} else {
-				logger.error("No result map is created from the command output " + this.commandOutput
-						+ " with expression " + xPathExpression);
-				return null;
-			}
-		} else {
-			logger.error("No Document instance is created for the command output " + this.commandOutput);
-			return null;
-		}
-	}
+    public Map<String, List<String>> parseXmlOutput(String xPathExpression, boolean returnMap) throws XPathExpressionException {
+        if (this.dom != null) {
+            Map<String, List<String>> map = this.parseDocument(xPathExpression, returnMap);
 
-	private Document createDocument() {
-		InputStream inputStream = null;
+            if (map != null && !map.isEmpty()) {
+                return map;
+            } else {
+                logger.error("No result map is created from the command output " + this.commandOutput
+                        + " with expression " + xPathExpression);
+                return null;
+            }
+        } else {
+            logger.error("No Document instance is created for the command output " + this.commandOutput);
+            return null;
+        }
+    }
 
-		if (this.commandOutput == null || this.commandOutput.trim().equals("")) {
-			logger.error("The command output can not be NULL or EMPTY " + this.commandOutput);
-			return null;
-		}
+    private Document createDocument() {
+        InputStream inputStream = null;
 
-		try {
-			inputStream = new ByteArrayInputStream(this.commandOutput.trim().getBytes("UTF-8"));
-			Document dom = this.parseXmlFile(inputStream);
-			return dom;
+        if (this.commandOutput == null || this.commandOutput.trim().equals("")) {
+            logger.error("The command output can not be NULL or EMPTY " + this.commandOutput);
+            return null;
+        }
 
-		} catch (UnsupportedEncodingException e) {
-			logger.error("UTF-8 Encoding Exception is occured for the command output " + this.commandOutput, e);
-		}
-		return null;
-	}
+        try {
+            inputStream = new ByteArrayInputStream(this.commandOutput.trim().getBytes("UTF-8"));
+            Document dom = this.parseXmlFile(inputStream);
+            return dom;
 
-	private Document parseXmlFile(InputStream inputStream) {
-		// get the factory
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        } catch (UnsupportedEncodingException e) {
+            logger.error("UTF-8 Encoding Exception is occured for the command output " + this.commandOutput, e);
+        }
+        return null;
+    }
 
-		try {
-			// Using factory get an instance of document builder
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			// parse using builder to get DOM representation of the XML file
-			Document dom = db.parse(inputStream);
-			logger.info("A instance of Document class is created");
-			return dom;
-		} catch (ParserConfigurationException pce) {
-			logger.error("ParserConfigurationException is occured for the command output " + this.commandOutput, pce);
-		} catch (SAXException se) {
-			logger.error("SAXException is occured for the command output " + this.commandOutput, se);
-		} catch (IOException ioe) {
-			logger.error("IOException is occured for the command output " + this.commandOutput, ioe);
-		}
-		return null;
-	}
+    private Document parseXmlFile(InputStream inputStream) {
+        // get the factory
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 
-	private List<Map<String, String>> parseDocument(String xPathExpression) throws XPathExpressionException {
-		// create a list to hold result map of the parameter.
-		List<Map<String, String>> resultMap = new ArrayList<Map<String, String>>();
-		NodeList nodes = getNodeList(xPathExpression);
-		for (int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			String nodeName = node.getNodeName();
-			Node n = node.getFirstChild();
-			if (n != null) {
-				String nodeValue = node.getChildNodes().item(0).getNodeValue();
-				// System.out.println(nodeName + "=" + nodeValue);
-				Map<String, String> map = new HashMap<String, String>();
-				map.put(nodeName, nodeValue);
-				resultMap.add(map);
+        try {
+            // Using factory get an instance of document builder
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            // parse using builder to get DOM representation of the XML file
+            Document dom = db.parse(inputStream);
+            logger.info("A instance of Document class is created");
+            return dom;
+        } catch (ParserConfigurationException pce) {
+            logger.error("ParserConfigurationException is occured for the command output " + this.commandOutput, pce);
+        } catch (SAXException se) {
+            logger.error("SAXException is occured for the command output " + this.commandOutput, se);
+        } catch (IOException ioe) {
+            logger.error("IOException is occured for the command output " + this.commandOutput, ioe);
+        }
+        return null;
+    }
 
-				logger.info(nodeName + "=" + nodeValue);
+    private List<Map<String, String>> parseDocument(String xPathExpression) throws XPathExpressionException {
+        // create a list to hold result map of the parameter.
+        List<Map<String, String>> resultMap = new ArrayList<Map<String, String>>();
+        NodeList nodes = getNodeList(xPathExpression);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            String nodeName = node.getNodeName();
+            Node n = node.getFirstChild();
+            if (n != null) {
+                String nodeValue = node.getChildNodes().item(0).getNodeValue();
+                // System.out.println(nodeName + "=" + nodeValue);
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(nodeName, nodeValue);
+                resultMap.add(map);
 
-			} else {
-				Map<String, String> map = new HashMap<String, String>();
-				map.put(nodeName, "");
-				resultMap.add(map);
-				logger.error(nodeName + " has no child node");
-			}
+                logger.info(nodeName + "=" + nodeValue);
 
-		}
-		return resultMap;
-	}
-	
-	
-	private Map<String, List<String>> parseDocument(String xPathExpression, boolean returnMap) throws XPathExpressionException {
-		// create a list to hold result map of the parameter.
-		Map<String, List<String>> map = new HashMap<String, List<String>>();
-		NodeList nodes = getNodeList(xPathExpression);
-		for (int i = 0; i < nodes.getLength(); i++) {
-			Node node = nodes.item(i);
-			String nodeName = node.getNodeName();
-			Node n = node.getFirstChild();
-			if (n != null) {
-				String nodeValue = node.getChildNodes().item(0).getNodeValue();
-				// System.out.println(nodeName + "=" + nodeValue);
-				List<String> values = null;
-				if (!map.containsKey(nodeName)) {
-					values = new ArrayList<String>();
-					values.add(nodeValue);
-					map.put(nodeName, values);
-				} else {
-					values = map.get(nodeName);
-					values.add(nodeValue);
-				}
-				
-				logger.info(nodeName + "=" + values);
+            } else {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put(nodeName, "");
+                resultMap.add(map);
+                logger.error(nodeName + " has no child node");
+            }
 
-			} else {
-				map.put(nodeName, null);
-				logger.error(nodeName + " has no child node");
-			}
+        }
+        return resultMap;
+    }
 
-		}
-		return map;
-	}
-	
-	
-	public NodeList getNodeList(String xPathExpression) {
-		XPath xpath = XPathFactory.newInstance().newXPath();
-		XPathExpression expr = null;
-		NodeList nodes = null;
-		try {
-			expr = xpath.compile(String.format("//parent::%s", xPathExpression));
-			nodes = (NodeList) expr.evaluate(this.dom, XPathConstants.NODESET);
-			return nodes;
-		} catch (XPathExpressionException e) {
-			logger.error("XPathExpressionException is occured for the command output " + this.commandOutput, e);
-		}
 
-		return null;
-	}
-	
+    private Map<String, List<String>> parseDocument(String xPathExpression, boolean returnMap) throws XPathExpressionException {
+        // create a list to hold result map of the parameter.
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        NodeList nodes = getNodeList(xPathExpression);
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            String nodeName = node.getNodeName();
+            Node n = node.getFirstChild();
+            if (n != null) {
+                String nodeValue = node.getChildNodes().item(0).getNodeValue();
+                // System.out.println(nodeName + "=" + nodeValue);
+                List<String> values = null;
+                if (!map.containsKey(nodeName)) {
+                    values = new ArrayList<String>();
+                    values.add(nodeValue);
+                    map.put(nodeName, values);
+                } else {
+                    values = map.get(nodeName);
+                    values.add(nodeValue);
+                }
 
-	public String getErrorMessage() {
-		return errorMessage;
-	}
+                logger.info(nodeName + "=" + values);
+
+            } else {
+                map.put(nodeName, null);
+                logger.error(nodeName + " has no child node");
+            }
+
+        }
+        return map;
+    }
+
+
+    public NodeList getNodeList(String xPathExpression) {
+        XPath xpath = XPathFactory.newInstance().newXPath();
+        XPathExpression expr = null;
+        NodeList nodes = null;
+        try {
+            expr = xpath.compile(String.format("//parent::%s", xPathExpression));
+            nodes = (NodeList) expr.evaluate(this.dom, XPathConstants.NODESET);
+            return nodes;
+        } catch (XPathExpressionException e) {
+            logger.error("XPathExpressionException is occured for the command output " + this.commandOutput, e);
+        }
+
+        return null;
+    }
+
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
 
 //	public static void main(String[] args) {
 //		try {
