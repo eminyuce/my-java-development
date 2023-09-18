@@ -2,7 +2,7 @@ package com.emin.yuce.service;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
-public class KeyUtil {
+public class CacheKeyGenerator {
     public static String generateCacheKey(HashMap<String, String> map) {
         // Sort the map by keys to ensure consistency in the cache key
         Map<String, String> sortedMap = map.entrySet()
