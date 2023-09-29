@@ -1,0 +1,19 @@
+@echo off
+setlocal enabledelayedexpansion
+
+rem Define the directory where you want to search for folders
+set "rootDir=C:\path\to\your\root\directory"
+
+rem Loop through all folders in the root directory
+for /d %%d in ("%rootDir%\*") do (
+    echo Entering folder: %%d
+    cd "%%d"
+
+    rem Execute the mvn clean install command
+    mvn clean install
+
+    rem Return to the root directory
+    cd "%rootDir%"
+)
+
+endlocal
