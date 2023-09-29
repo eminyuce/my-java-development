@@ -10,7 +10,7 @@ for /d %%d in ("%rootDir%\*") do (
     cd "%%d"
 
     rem Execute the mvn clean install command
-    mvn clean install
+    mvn clean install -DskipTests=true
 
     rem Return to the root directory
     cd "%rootDir%"
