@@ -64,6 +64,7 @@ public class YourApplication {
 </dependencies>
 
 
+
         import org.junit.jupiter.api.BeforeEach;
         import org.junit.jupiter.api.Test;
         import org.mockito.Mock;
@@ -75,8 +76,8 @@ public class YourApplication {
         import java.io.IOException;
         import java.nio.file.Files;
         import java.nio.file.Path;
-        import java.util.Arrays;
-        import java.util.List;
+        import java.util.HashMap;
+        import java.util.Map;
 
         import static org.junit.jupiter.api.Assertions.assertEquals;
         import static org.mockito.Mockito.when;
@@ -108,16 +109,19 @@ class FileServiceTest {
         Path tempFile1 = Files.createTempFile("tempfile1", ".txt");
         Path tempFile2 = Files.createTempFile("tempfile2", ".txt");
         when(Files.walk(resource.getFile().toPath()))
-                .thenReturn(Arrays.asList(tempFile1, tempFile2));
+                .thenReturn(List.of(tempFile1, tempFile2));
 
         // Mock the behavior of Files.readAllBytes()
         when(Files.readAllBytes(tempFile1)).thenReturn(file1Content.getBytes());
         when(Files.readAllBytes(tempFile2)).thenReturn(file2Content.getBytes());
 
         // Execute the method to test
-        List<String> result = fileService.getAllFilesContentInCustomerFolder();
+        Map<String, String> result = fileService.getAllFilesContentInCustomerFolder();
 
         // Verify the result
-        assertEquals(Arrays.asList(file1Content, file2Content), result);
+        Map<String, String> expected = new HashMap<>();
+        expected.put(tempFile1.getFileName().toString(), file1Content);
+        expected.put(tempFile2.getFileName().toString(), file2Content);
+        assertEquals(expected, result);
     }
 }
