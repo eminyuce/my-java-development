@@ -62,3 +62,62 @@ public class YourApplication {
 </exclusions>
 </dependency>
 </dependencies>
+
+
+        import org.junit.jupiter.api.BeforeEach;
+        import org.junit.jupiter.api.Test;
+        import org.mockito.Mock;
+        import org.mockito.MockitoAnnotations;
+        import org.springframework.core.io.DefaultResourceLoader;
+        import org.springframework.core.io.Resource;
+        import org.springframework.core.io.ResourceLoader;
+
+        import java.io.IOException;
+        import java.nio.file.Files;
+        import java.nio.file.Path;
+        import java.util.Arrays;
+        import java.util.List;
+
+        import static org.junit.jupiter.api.Assertions.assertEquals;
+        import static org.mockito.Mockito.when;
+
+class FileServiceTest {
+
+    @Mock
+    private ResourceLoader resourceLoader;
+
+    private FileService fileService;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.initMocks(this);
+        fileService = new FileService(resourceLoader);
+    }
+
+    @Test
+    void testGetAllFilesContentInCustomerFolder() throws IOException {
+        // Mock the behavior of the ResourceLoader
+        Resource resource = new DefaultResourceLoader().getResource("classpath:customer/");
+        when(resourceLoader.getResource("classpath:customer/")).thenReturn(resource);
+
+        // Mock file content
+        String file1Content = "File 1 Content";
+        String file2Content = "File 2 Content";
+
+        // Mock the behavior of Files.walk()
+        Path tempFile1 = Files.createTempFile("tempfile1", ".txt");
+        Path tempFile2 = Files.createTempFile("tempfile2", ".txt");
+        when(Files.walk(resource.getFile().toPath()))
+                .thenReturn(Arrays.asList(tempFile1, tempFile2));
+
+        // Mock the behavior of Files.readAllBytes()
+        when(Files.readAllBytes(tempFile1)).thenReturn(file1Content.getBytes());
+        when(Files.readAllBytes(tempFile2)).thenReturn(file2Content.getBytes());
+
+        // Execute the method to test
+        List<String> result = fileService.getAllFilesContentInCustomerFolder();
+
+        // Verify the result
+        assertEquals(Arrays.asList(file1Content, file2Content), result);
+    }
+}
