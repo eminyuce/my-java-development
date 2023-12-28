@@ -131,3 +131,8 @@ class FileServiceTest {
         excludeName = {"org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration$JwtTokenServicesConfiguration"})
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
 public class Elephant
+
+@Configuration
+@ComponentScan(basePackages = "com.example",
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = MyExcludeComponent.class))
+public class AppConfig {
