@@ -125,3 +125,9 @@ class FileServiceTest {
         assertEquals(expected, result);
     }
 }
+
+@SpringBootApplication
+@EnableAutoConfiguration(exclude = {ResourceServerTokenServicesConfiguration.class},
+        excludeName = {"org.springframework.boot.autoconfigure.security.oauth2.resource.ResourceServerTokenServicesConfiguration$JwtTokenServicesConfiguration"})
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, proxyTargetClass = true)
+public class Elephant
