@@ -24,6 +24,14 @@ public class GsonLib {
             System.out.println("Customer File: " + suspendAccountFile.getCustomerFile());
             System.out.println();
         }
+
+        // Define the type for Gson to parse into
+        Type suspendAccountFileType = new TypeToken<List<SuspendAccountFile>>(){}.getType();
+
+        // Use Gson to convert JSON string to List<SuspendAccountFile>
+        List<SuspendAccountFile> suspendAccountFiles = new Gson().fromJson(jsonString, suspendAccountFileType);
+
+
     }
     class SuspendAccountFile {
         private String accountFile;
