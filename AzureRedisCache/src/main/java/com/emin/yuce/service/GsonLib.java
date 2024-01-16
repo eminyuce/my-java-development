@@ -35,6 +35,13 @@ public class GsonLib {
     }
     class SuspendAccountFile {
         private String accountFile;
+        @Pattern(regexp = "[1-9]\\d{9}", message = "Invalid value")
+        private String yourField;
+//        This regular expression breaks down as follows:
+//
+//                [1-9]: Ensures that the first digit is not zero.
+//                \\d{9}: Matches exactly 9 digits after the first one.
+//        This way, the total length is 10 digits, and the first digit is not allowed to be zero.
         private String customerFile;
 
         // Add constructors, getters, and setters as needed
