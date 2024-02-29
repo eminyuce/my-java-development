@@ -18,7 +18,11 @@ import com.emin.yuce.model.Bookstore;
 public class BookMain {
 
     private static final String BOOKSTORE_XML = "./bookstore-jaxb.xml";
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
+    public static DateTimeFormatter getDateTimeFormatter() {
+        return dateTimeFormatter;
+    }
     public static void main(String[] args) throws JAXBException, IOException {
 
         ArrayList<Book> bookList = new ArrayList<Book>();
