@@ -38,6 +38,21 @@ public class JavaFileSearch {
         return javaFiles;
     }
 
+    private static List<File> findJavaFiles_v2(File directory) {
+        List<File> javaFiles = new ArrayList<>();
+        File[] files = directory.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                if (file.isDirectory()) {
+                    javaFiles.addAll(findJavaFiles(file));
+                } else if (file.isFile() && file.getName().endsWith(".java")) {
+                    javaFiles.add(file);
+                }
+            }
+        }
+        return javaFiles;
+    }
+
     private static boolean containsString(Path file, String searchString) throws IOException {
         return Files.lines(file)
                 .anyMatch(line -> line.contains(searchString));
