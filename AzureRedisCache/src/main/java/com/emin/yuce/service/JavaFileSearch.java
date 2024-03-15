@@ -29,7 +29,7 @@ public class JavaFileSearch {
         if (files != null) {
             for (File file : files) {
                 if (file.isDirectory() && file.getName().startsWith("tm-core-")) {
-                    javaFiles.addAll(findJavaFiles(file));
+                    javaFiles.addAll(findJavaFiles_v2(file));
                 } else if (file.isFile() && file.getName().endsWith(".java")) {
                     javaFiles.add(file);
                 }
