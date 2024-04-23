@@ -1,0 +1,23 @@
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class MyController {
+
+    @Autowired
+    private Environment environment;
+
+    @GetMapping("/your-endpoint")
+    public ResponseEntity<String> yourEndpoint() {
+        if (Arrays.asList(environment.getActiveProfiles()).contains("prod")) {
+            // Code to execute in prod profile
+            return ResponseEntity.ok("This is for prod profile");
+        } else {
+            // Code to execute in other profiles
+            return ResponseEntity.ok("This is for other profiles");
+        }
+    }
+}
