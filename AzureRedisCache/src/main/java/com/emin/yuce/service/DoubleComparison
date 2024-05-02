@@ -13,3 +13,19 @@ public class DoubleComparison {
         }
     }
 }
+
+  // Case-insensitive List implementation
+    static class CaseInsensitiveList<E> extends ArrayList<String> {
+        @Override
+        public boolean contains(Object o) {
+            if (o instanceof String) {
+                String str = (String) o;
+                for (String element : this) {
+                    if (str.equalsIgnoreCase(element)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+    }
