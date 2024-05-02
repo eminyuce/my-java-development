@@ -14,18 +14,38 @@ public class DoubleComparison {
     }
 }
 
-  // Case-insensitive List implementation
-    static class CaseInsensitiveList<E> extends ArrayList<String> {
-        @Override
-        public boolean contains(Object o) {
-            if (o instanceof String) {
-                String str = (String) o;
-                for (String element : this) {
-                    if (str.equalsIgnoreCase(element)) {
-                        return true;
-                    }
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+public class CaseInsensitiveList<E> extends ArrayList<E> {
+    // Factory method to create a CaseInsensitiveList from elements
+    public static <E> CaseInsensitiveList<E> of(E... elements) {
+        CaseInsensitiveList<E> list = new CaseInsensitiveList<>();
+        for (E element : elements) {
+            list.add(element);
+        }
+        return list;
+    }
+
+    // Constructor
+    public CaseInsensitiveList() {
+        super();
+    }
+
+    // Override contains method for case-insensitive comparison
+    @Override
+    public boolean contains(Object o) {
+        if (o instanceof String) {
+            String str = (String) o;
+            for (E element : this) {
+                if (str.equalsIgnoreCase(element.toString())) {
+                    return true;
                 }
             }
-            return false;
         }
+        return false;
     }
+
+    // Override other List methods if needed...
+}
