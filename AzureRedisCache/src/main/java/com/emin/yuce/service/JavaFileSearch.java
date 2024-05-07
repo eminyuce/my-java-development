@@ -83,4 +83,20 @@ public class JavaFileSearch {
             return false;
         }
     }
+
+    private static boolean containsStringIndexLine2(Path file, String searchString) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader(file.toFile()))) {
+            String line;
+            int lineNumber = 0;
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                if (line.contains(searchString)) {
+                    System.out.println("Search String found at line number: " + lineNumber);
+                    return true;
+                }
+            }
+        }
+        System.out.println("Search String not found.");
+        return false;
+    }
 }
