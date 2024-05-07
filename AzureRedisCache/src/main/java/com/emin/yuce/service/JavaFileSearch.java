@@ -57,4 +57,30 @@ public class JavaFileSearch {
         return Files.lines(file)
                 .anyMatch(line -> line.contains(searchString));
     }
+
+    private static class IndexedLine {
+        String line;
+        int lineNumber;
+
+        IndexedLine(String line, int lineNumber) {
+            this.line = line;
+            this.lineNumber = lineNumber;
+        }
+    }
+
+    private static boolean containsStringIndexLine(Path file, String searchString) throws IOException {
+        IndexedLine result = Files.lines(file)
+                .map((line, lineNumber) -> new IndexedLine(line, lineNumber + 1))
+                .filter(indexedLine -> indexedLine.line.contains(searchString))
+                .findFirst()
+                .orElse(null);
+
+        if (result != null) {
+            System.out.println("Search String found at line number: " + result.lineNumber);
+            return true;
+        } else {
+            System.out.println("Search String not found.");
+            return false;
+        }
+    }
 }
