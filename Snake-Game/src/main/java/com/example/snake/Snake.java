@@ -4,6 +4,15 @@ public class Snake {
     private final GameBoard gameBoard;
     private   int x;
     private   int y;
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     private Direction direction;
 
     public Snake(GameBoard gameBoard) {

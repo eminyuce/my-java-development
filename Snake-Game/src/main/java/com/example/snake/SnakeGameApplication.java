@@ -18,6 +18,8 @@ public class SnakeGameApplication {
             GameBoard gameBoard = new GameBoard(20, 20);
             Snake snake = new Snake(gameBoard);
             Food food = new Food(gameBoard);
+            gameBoard.setSnake(snake);
+            gameBoard.setFood(food);
 
             while (true) {
                 gameBoard.printBoard();
