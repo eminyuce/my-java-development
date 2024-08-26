@@ -1,22 +1,9 @@
 package com.example.snake;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.NamedStoredProcedureQuery;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureParameter;
+import jakarta.persistence.*;
 
 @Entity
-@NamedStoredProcedureQuery(
-    name = "Triangle.findTriangleType",
-    procedureName = "findTriangleType",
-    parameters = {
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "a", type = Integer.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "b", type = Integer.class),
-        @StoredProcedureParameter(mode = ParameterMode.IN, name = "c", type = Integer.class),
-        @StoredProcedureParameter(mode = ParameterMode.OUT, name = "type", type = String.class)
-    }
-)
+@Table(name = "TRIANGLES")
 public class Triangle {
     @Id
     private Long id;
