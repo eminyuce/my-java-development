@@ -23,10 +23,14 @@ public class SnakeGameApplication {
         // Retrieve a bean from the application context by type
         TriangleService triangleService = context.getBean(TriangleService.class);
 
+
+        triangleService.getAllTriangleTypes();
+
         // Use the bean
         triangleService.checkTriangleType();
 
         // extracted();
+        System.exit(1);
     }
 
     private static void extracted() {
